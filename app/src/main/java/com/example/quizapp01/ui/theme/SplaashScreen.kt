@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = MaterialTheme.colorScheme.onBackground
                 ) {
 
                 }
@@ -58,8 +58,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun SplashScreen(onTimeOut:() ->Unit,modifier: Modifier = Modifier ) {
-    val image = painterResource(R.drawable.pngegg_1_)
-    Surface(color = Color(0xFF9AB2B8), modifier = modifier
+    val image = painterResource(R.drawable.design)
+    Surface(color = Color(0xFFDCDCDD), modifier = modifier
         .fillMaxSize()
 
     )
@@ -68,12 +68,15 @@ fun SplashScreen(onTimeOut:() ->Unit,modifier: Modifier = Modifier ) {
 
     Box(modifier = modifier)
     Image(painter = image, alignment = Alignment.Center,
-        contentDescription = null,
-        modifier = modifier.padding(
-            vertical = 200.dp,
-            horizontal = 22.dp
-        )
+        contentDescription = "Splash Screen Icon",
+      modifier = modifier.
+        fillMaxSize()
+      //padding(
+//            vertical = 200.dp,
+//            horizontal = 22.dp
+  //      )
     )
+
 LaunchedEffect(true )
 {
     delay(500)

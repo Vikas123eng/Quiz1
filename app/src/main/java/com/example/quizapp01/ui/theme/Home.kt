@@ -43,8 +43,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.quizapp01.R
 import com.example.quizapp01.ui.theme.data.MessageActivity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.auth.GoogleAuthCredential
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -68,15 +76,16 @@ class Home : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    val navController= rememberNavController()
                     // Call the LoginScreen composable
-                    ScaffoldExample()
+                    ScaffoldExample(navController )
                 }
             }
         }
 
 
     }
-    
+
 
 }
 
@@ -85,10 +94,11 @@ class Home : ComponentActivity() {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun ScaffoldExample() {
-
-        var presses by remember { mutableIntStateOf(0) }
+    fun ScaffoldExample(navController: NavController) {
         val context= LocalContext.current
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
+        val googleSignInClient = GoogleSignIn.getClient(context, gso)
+        var presses by remember { mutableIntStateOf(0) }
 
 
         Scaffold(
@@ -114,13 +124,12 @@ class Home : ComponentActivity() {
                         }
                     },
                     actions = {
-                        IconButton(onClick = {Firebase.auth.signOut()
-                            Toast.makeText(context, "logging out", Toast.LENGTH_SHORT).show()
-                            val intent = Intent(context, LoginActivity::class.java)
-                            context.startActivity(intent)
-                            (context as Activity).finish()
-
-                        }) {
+                        IconButton(onClick = {
+                            Firebase.auth.signOut()
+                            Toast.makeText(context, "Logging out...", Toast.LENGTH_SHORT).show()
+                            navController.navigate("login")
+                        })
+                         {
                             Icon(
                                 imageVector = Icons.Filled.Logout,
                                 contentDescription = "Localized description",
@@ -143,13 +152,6 @@ class Home : ComponentActivity() {
 @Composable
 fun ScrollContent(innerPadding: PaddingValues) {
     Box(modifier = Modifier.fillMaxSize()) {
-        val image = painterResource(R.drawable.i002)
-        Image(painter = image,
-            contentDescription = "<a href=\"https://www.freepik.com/free-vector/chemistry-icon_3887185.htm#fromView=image_search&track=&regularType=vector&page=1&position=51&uuid=f73f2340-a295-4018-8633-047b871c7454\">Image by macrovector</a> on Freepik"
-            , contentScale = ContentScale.FillBounds
-            , modifier=Modifier.matchParentSize()
-
-        )
         Column(
             modifier = Modifier
                 .padding(innerPadding)
@@ -162,9 +164,7 @@ fun ScrollContent(innerPadding: PaddingValues) {
             val context = LocalContext.current
             val intent = Intent(context, MessageActivity::class.java)
             val subject = intent.getStringExtra("subject") ?: "DefaultSubject"
-//            val kill = intent.getStringExtra("kill") ?: "Not kill"
 
-            // Call the ClassList composable with the selected subject
             ClassList()
         }
     }
@@ -193,11 +193,7 @@ fun ButtonItem(text: String) {
 
 
 
-@Preview
-@Composable
-fun HomePreview(){
-    ScaffoldExample()
-}
+
 
 @Composable
 fun ClassList() {
@@ -222,4 +218,3 @@ fun ClassList() {
         }
     }
 }
-

@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.compose.runtime.remember
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,10 +16,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -43,7 +44,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -76,41 +76,32 @@ class SignUp :ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     // Call the LoginScreen composable
-                    SignUpScreen()
+                    SignUpScreen(navController)
                 }
             }
         }
     }
 }
 @Composable
-fun SignUpScreen(modifier: Modifier = Modifier) {
+fun SignUpScreen(navController: NavController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmpassword by remember { mutableStateOf("") }
     var isPasswordVisible by remember { mutableStateOf(false) }
-    val imagelog = painterResource(R.drawable.background_login)
+
 
     // ...
 
 
 
-    Surface(
-        modifier = modifier
-            .fillMaxSize()
-        , color = Color.White
-        ,
 
-
-
-
-        ) {
-        Column(modifier=modifier.padding(23.dp),
+        Column(modifier=Modifier.padding(23.dp),
 
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Image(painter = imagelog, contentDescription = "backgroundimage")
+
 
             OutlinedTextField(
 
@@ -118,15 +109,12 @@ fun SignUpScreen(modifier: Modifier = Modifier) {
                 value = email,
                 onValueChange = { email = it },
                 label = { Text(text = "Email") },
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 4.dp),
 
                 leadingIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.a),
-                        contentDescription = "Email"
-                    )
+                    Icon(Icons.Default.Email, contentDescription = "Email Icon")
                 },
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Email,
@@ -139,7 +127,7 @@ fun SignUpScreen(modifier: Modifier = Modifier) {
                 value = password,
                 onValueChange = { password = it },
                 label = { Text(text = "Password") },
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 4.dp),
                 leadingIcon = {
@@ -165,7 +153,7 @@ fun SignUpScreen(modifier: Modifier = Modifier) {
                 value = confirmpassword,
                 onValueChange = { confirmpassword = it },
                 label = { Text(text = "Confirm Password") },
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 4.dp),
                 leadingIcon = {
@@ -188,7 +176,13 @@ fun SignUpScreen(modifier: Modifier = Modifier) {
                 else PasswordVisualTransformation()
             )
             val context= LocalContext.current
-            Button(onClick = { /*TODO*/createAccount(email,password, confirmpassword,context) }, modifier = modifier.fillMaxWidth()) {
+            Button(onClick = { createAccount(email,password, confirmpassword,context) },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    Electric_Blue
+                )
+            )
+            {
                 Text(text = "Sign Up")
             }
 
@@ -205,7 +199,7 @@ fun SignUpScreen(modifier: Modifier = Modifier) {
         }
     }
 
-}
+
 
 
 
@@ -243,9 +237,3 @@ private const val TAG = "EmailPassword"
 
 
 
-@Preview
-@Composable
-fun SignUpPreview(){
-    SignUpScreen()
-
-}

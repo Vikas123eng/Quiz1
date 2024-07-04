@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
     <style name="Theme.QuizApp01" parent="android:Theme.Material.Light.NoActionBar" >
-    <item name="android:windowBackground">@color/mycolorsplashscreen</item>
+    <item name="android:windowBackground" >@color/white</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
+
 
 </resources>
