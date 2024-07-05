@@ -19,7 +19,6 @@ import com.google.firebase.ktx.Firebase
 
 
 class MainActivity : ComponentActivity() {
-
 //private lateinit var firestore: FirebaseFirestore
 //    private fun setUpFirestore(){
 //
@@ -36,15 +35,16 @@ class MainActivity : ComponentActivity() {
 //        }
 //    }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        var auth: FirebaseAuth? = null
+        val auth: FirebaseAuth?
         auth = Firebase.auth
         val currentUser = auth.currentUser
 
         setContent {
             QuizApp01Theme {
-
+                Log.d("Debug","Splash1")
                     SplashScreen(onTimeOut = {
                                    // setUpFirestore()
                         if (currentUser != null) {

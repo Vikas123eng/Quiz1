@@ -97,7 +97,7 @@ fun UserProfileScreen(navController: NavController) {
     val username = remember { mutableStateOf("") }
 
     Surface(
-        color = MaterialTheme.colorScheme.primary,
+        color = Color.White,
         contentColor = Color.Blue
     ) {
 
@@ -151,7 +151,7 @@ fun UserProfileScreen(navController: NavController) {
                 modifier = Modifier.padding(top = 16.dp),
                 onClick = {
                     // Save the user's details and navigate to the next screen
-                    if (username.value.isNotEmpty() || className.value.isNotEmpty()) {
+                    if (username.value.isNotEmpty() && className.value.isNotEmpty()) {
                         navController.navigate("home")
                     } else {
                         Toast.makeText(

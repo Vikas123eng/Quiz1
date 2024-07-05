@@ -38,6 +38,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -59,22 +60,14 @@ import com.google.firebase.ktx.Firebase
 
 class Home : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-
-
-
-
-
-
         super.onCreate(savedInstanceState)
-
-
         setContent {
             QuizApp01Theme {
 
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = Color.White
                 ) {
                     val navController= rememberNavController()
                     // Call the LoginScreen composable
@@ -97,16 +90,15 @@ class Home : ComponentActivity() {
     fun ScaffoldExample(navController: NavController) {
         val context= LocalContext.current
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
-        val googleSignInClient = GoogleSignIn.getClient(context, gso)
+        val googleSignInClient = GoogleSignIn.getClient(context, GoogleSignInOptions.DEFAULT_SIGN_IN)
         var presses by remember { mutableIntStateOf(0) }
-
 
         Scaffold(
             topBar = {
                 TopAppBar(
                     colors = topAppBarColors(
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        titleContentColor = MaterialTheme.colorScheme.primary,
+                       titleContentColor = MaterialTheme.colorScheme.primary,
                     ),
                     title = {
 
@@ -126,8 +118,11 @@ class Home : ComponentActivity() {
                     actions = {
                         IconButton(onClick = {
                             Firebase.auth.signOut()
-                            Toast.makeText(context, "Logging out...", Toast.LENGTH_SHORT).show()
-                            navController.navigate("login")
+                            googleSignInClient.signOut().addOnCompleteListener {
+                                Toast.makeText(context, "Logging out...", Toast.LENGTH_SHORT).show()
+                                navController.navigate("login")
+                            }
+
                         })
                          {
                             Icon(
@@ -160,7 +155,7 @@ fun ScrollContent(innerPadding: PaddingValues) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-
+Color.White
             val context = LocalContext.current
             val intent = Intent(context, MessageActivity::class.java)
             val subject = intent.getStringExtra("subject") ?: "DefaultSubject"
@@ -203,7 +198,7 @@ fun ClassList() {
     // Display the subjects using LazyColumn
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         items(subjects) { subject ->
             // Display each subject in a Card or any other layout as needed

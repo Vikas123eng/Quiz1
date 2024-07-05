@@ -61,8 +61,10 @@ import androidx.navigation.compose.rememberNavController
 import com.example.quizapp01.R
 import com.example.quizapp01.ui.theme.ui.login.UserProfileScreen
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignIn.*
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions.*
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -72,29 +74,28 @@ import com.google.firebase.ktx.Firebase
 
 
 private lateinit var auth: FirebaseAuth
-private const val RC_SIGN_IN = 9001
 
 class LoginActivity : ComponentActivity() {
     private lateinit var mGoogleSignInClient: GoogleSignInClient
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         auth = Firebase.auth
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        val gso = Builder(DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.client_id))
             .requestEmail()
             .build()
 
 
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
+        mGoogleSignInClient = getClient(this, gso)
 
         setContent {
             QuizApp01Theme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = Color.White
                 ) {
                    val navController = rememberNavController()
-                    NavHost(navController = navController as NavHostController, startDestination = "login") {
+                    NavHost(navController = navController, startDestination = "login") {
                         composable("login") {
                             LoginScreen(navController=navController,mGoogleSignInClient)
                         }
@@ -130,7 +131,7 @@ fun LoginScreen(navController: NavController,mGoogleSignInClient: GoogleSignInCl
         contract = ActivityResultContracts.StartActivityForResult(),
         onResult = { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+                val task = getSignedInAccountFromIntent(result.data)
                 task.addOnCompleteListener { signInTask ->
                     if (signInTask.isSuccessful) {
                         try {
