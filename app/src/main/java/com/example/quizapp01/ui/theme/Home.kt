@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,103 +47,125 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.quizapp01.R
 import com.example.quizapp01.ui.theme.data.MessageActivity
+import com.example.quizapp01.ui.theme.ui.login.Screen
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignIn.*
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions.*
 import com.google.firebase.auth.GoogleAuthCredential
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 
-class Home : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            QuizApp01Theme {
-
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = Color.White
-                ) {
-                    val navController= rememberNavController()
-                    // Call the LoginScreen composable
-                    ScaffoldExample(navController )
-                }
-            }
-        }
-
-
-    }
-
-
-}
-
+//class Home : ComponentActivity() {
+//    private lateinit var mGoogleSignInClient: GoogleSignInClient
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        val gso = Builder(DEFAULT_SIGN_IN)
+//            .requestIdToken(getString(R.string.client_id))
+//            .requestEmail()
+//            .build()
+//
+//
+//        mGoogleSignInClient = getClient(this, gso)
+//        setContent {
+//            QuizApp01Theme {
+//
+//                Surface(
+//                    modifier = Modifier.fillMaxSize(),
+//                    color = Color.White
+//                ) {
+//                    val navController = rememberNavController()
+//                    NavHost(navController = navController, startDestination = "home") {
+//                        composable("login") {
+//                            HomeScreen(navController=navController)
+//                        }
+//                        composable("login"){
+//                            LoginScreen(navController=navController,mGoogleSignInClient)
+//                        }
+//
+//                            //omeScreen(navController = NavController)
+//                        }
+//                }
+//            }
+//        }
+//
+//
+//    }
+//
+//
+//}
+//
 
 
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun ScaffoldExample(navController: NavController) {
-        val context= LocalContext.current
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
-        val googleSignInClient = GoogleSignIn.getClient(context, GoogleSignInOptions.DEFAULT_SIGN_IN)
-        var presses by remember { mutableIntStateOf(0) }
+    fun HomeScreen(navController: NavController) {
+        val context = LocalContext.current
+        val googleSignInClient = getClient(context, DEFAULT_SIGN_IN)
+        // var presses by remember { mutableIntStateOf(0) }
 
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    colors = topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                       titleContentColor = MaterialTheme.colorScheme.primary,
-                    ),
-                    title = {
+        Surface (modifier = Modifier.background(Color.White)){
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        colors = topAppBarColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            titleContentColor = MaterialTheme.colorScheme.primary,
+                        ),
+                        title = {
 
-                        Text(text = "Home")
-                    },navigationIcon = {
-                        IconButton(onClick = { /* do something */
+                            Text(text = "Home")
+                        }, navigationIcon = {
+                            IconButton(onClick = { /* do something */
 
 
-                        }) {
-                            Icon(
-                                imageVector = Icons.Filled.Menu,
-                                contentDescription = "Localized description",
-                                        modifier = Modifier.fillMaxSize()
-                            )
-                        }
-                    },
-                    actions = {
-                        IconButton(onClick = {
-                            Firebase.auth.signOut()
-                            googleSignInClient.signOut().addOnCompleteListener {
-                                Toast.makeText(context, "Logging out...", Toast.LENGTH_SHORT).show()
-                                navController.navigate("login")
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Filled.Menu,
+                                    contentDescription = "Localized description",
+                                    modifier = Modifier.fillMaxSize()
+                                )
                             }
+                        },
+                        actions = {
+                            IconButton(onClick = {
+                                Firebase.auth.signOut()
+                                googleSignInClient.signOut().addOnCompleteListener {
+                                    Toast.makeText(context, "Logging out...", Toast.LENGTH_SHORT)
+                                        .show()
+                                    navController.navigate(Screen.Login.route)
 
-                        })
-                         {
-                            Icon(
-                                imageVector = Icons.Filled.Logout,
-                                contentDescription = "Localized description",
-                                        modifier = Modifier.fillMaxSize()
-                            )
+                                }
+
+                            })
+                            {
+                                Icon(
+                                    imageVector = Icons.Filled.Logout,
+                                    contentDescription = "Localized description",
+                                    modifier = Modifier.fillMaxSize()
+                                )
+                            }
                         }
-                    }
 
-                )
+                    )
 
-            }
+                }
 
 //
-        ) { innerPadding ->
-            ScrollContent(innerPadding)
+            ) { innerPadding ->
+                ScrollContent(innerPadding)
+            }
         }
     }
-
 
 @Composable
 fun ScrollContent(innerPadding: PaddingValues) {
@@ -160,56 +183,56 @@ Color.White
             val intent = Intent(context, MessageActivity::class.java)
             val subject = intent.getStringExtra("subject") ?: "DefaultSubject"
 
-            ClassList()
+           // ClassList()
         }
     }
 }
 
-@Composable
-fun ButtonItem(text: String) {
-    val context= LocalContext.current
-    Button(
-        onClick = {
-            val intent = Intent(context, MessageActivity::class.java)
-            intent.putExtra("subject", text)
-            context.startActivity(intent)
-            // Handle button click
-        },
-        modifier = Modifier
+//@Composable
+//fun ButtonItem(text: String) {
+//    val context= LocalContext.current
+//    Button(
+//        onClick = {
+//            val intent = Intent(context, MessageActivity::class.java)
+//            intent.putExtra("subject", text)
+//            context.startActivity(intent)
+//            // Handle button click
+//        },
+//        modifier = Modifier
+//
+//
+//            .fillMaxWidth()
+//            .padding(8.dp)
+//    ) {
+//        Text(text = text)
+//    }
+//}
+//
 
 
-            .fillMaxWidth()
-            .padding(8.dp)
-    ) {
-        Text(text = text)
-    }
-}
 
 
 
-
-
-
-@Composable
-fun ClassList() {
-    // Create a list of subjects
-    val subjects = listOf("Physics", "Chemistry", "Maths", "Biology")
-
-    // Display the subjects using LazyColumn
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-    ) {
-        items(subjects) { subject ->
-            // Display each subject in a Card or any other layout as needed
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
-            ) {
-                ButtonItem(text = subject)
-            }
-        }
-    }
-}
+//@Composable
+//fun ClassList() {
+//    // Create a list of subjects
+//    val subjects = listOf("Physics", "Chemistry", "Maths", "Biology")
+//
+//    // Display the subjects using LazyColumn
+//    LazyColumn(
+//        modifier = Modifier.fillMaxSize(),
+//        verticalArrangement = Arrangement.Center,
+//    ) {
+//        items(subjects) { subject ->
+//            // Display each subject in a Card or any other layout as needed
+//            Card(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(8.dp),
+//                elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
+//            ) {
+//                ButtonItem(text = subject)
+//            }
+//        }
+//    }
+//}

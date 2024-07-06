@@ -91,7 +91,7 @@ import com.google.firebase.ktx.Firebase
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserProfileScreen(navController: NavController) {
+fun UserDataScreen(navController: NavController) {
     val context = LocalContext.current
     val className = remember { mutableStateOf("") }
     val username = remember { mutableStateOf("") }
@@ -152,7 +152,7 @@ fun UserProfileScreen(navController: NavController) {
                 onClick = {
                     // Save the user's details and navigate to the next screen
                     if (username.value.isNotEmpty() && className.value.isNotEmpty()) {
-                        navController.navigate("home")
+                        navController.navigate(Screen.Home.route)
                     } else {
                         Toast.makeText(
                             navController.context,

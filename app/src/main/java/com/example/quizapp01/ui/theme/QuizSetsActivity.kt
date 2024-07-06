@@ -391,10 +391,10 @@ fun QuizSummary(
         Button(onClick =
         {
 //val text ="kill"
-            val intent=Intent(context,Home::class.java)
-            context.startActivity(intent)
-//            intent.putExtra("kill", text)
-            (context as Activity  ).finish()
+//            val intent=Intent(context,Home::class.java)
+//            context.startActivity(intent)
+////            intent.putExtra("kill", text)
+//            (context as Activity  ).finish()
 
         }
 

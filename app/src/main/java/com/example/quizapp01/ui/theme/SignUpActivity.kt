@@ -9,6 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -48,59 +49,66 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.quizapp01.R
+import com.example.quizapp01.ui.theme.ui.login.Screen
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 
 // Initialize Firebase Auth
-private lateinit var auth: FirebaseAuth
+//private lateinit var auth: FirebaseAuth
 // Initialize Firebase Auth
+//
+//class SignUp :ComponentActivity() {
+//
+//
+//
+//
+//
+//
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        auth = Firebase.auth
+//        setContent {
+//            QuizApp01Theme {
+//                val navController: NavHostController = rememberNavController()
+//                // A surface container using the 'background' color from the theme
+//                Surface(
+//                    modifier = Modifier.fillMaxSize(),
+//                    color = MaterialTheme.colorScheme.background
+//                ) {
+//                    // Call the LoginScreen composable
+//                    SignUpScreen(navController)
+//                }
+//            }
+//        }
+//    }
+//}
 
-class SignUp :ComponentActivity() {
-
-
-
-
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        auth = Firebase.auth
-        setContent {
-            QuizApp01Theme {
-                val navController: NavHostController = rememberNavController()
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    // Call the LoginScreen composable
-                    SignUpScreen(navController)
-                }
-            }
-        }
-    }
-}
 @Composable
 fun SignUpScreen(navController: NavController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmpassword by remember { mutableStateOf("") }
     var isPasswordVisible by remember { mutableStateOf(false) }
-
+    val auth = Firebase.auth
 
     // ...
 
 
+    Surface(contentColor = Color.Black,
+        modifier = Modifier.fillMaxSize()
+        .background(Color.White)
+    )
+             {
 
 
-        Column(modifier=Modifier.padding(23.dp),
+        Column(
+            modifier = Modifier.padding(23.dp),
 
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
 
 
             OutlinedTextField(
@@ -175,8 +183,18 @@ fun SignUpScreen(navController: NavController) {
                 visualTransformation = if (isPasswordVisible) VisualTransformation.None
                 else PasswordVisualTransformation()
             )
-            val context= LocalContext.current
-            Button(onClick = { createAccount(email,password, confirmpassword,context) },
+            val context = LocalContext.current
+            Button(
+                onClick = {
+                    createAccount(
+                        email,
+                        password,
+                        confirmpassword,
+                        context,
+                        navController,
+                        auth
+                    )
+                },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
                     Electric_Blue
@@ -188,24 +206,22 @@ fun SignUpScreen(navController: NavController) {
 
 
 
-             TextButton(onClick = { /*TODO*/
-                 val intent = Intent(context, LoginActivity::class.java)
-                 context.startActivity(intent)
-                 (context as Activity).finish()
-                }) {
-                    Text(text = "Already have an account")
+            TextButton(onClick = {
+                navController.navigate(Screen.Login.route)
+            }) {
+                Text(text = "Already have an account")
 
             }
         }
     }
 
-
+}
 
 
 
 
 private const val TAG = "EmailPassword"
- fun createAccount(email: String, password: String,confirmpassword: String,context:Context) {
+ fun createAccount(email: String, password: String,confirmpassword: String,context:Context,navController: NavController,auth: FirebaseAuth) {
     // [START create_user_with_email]
 
         if (password.isEmpty() || confirmpassword.isEmpty() || email.isEmpty()) {
@@ -218,9 +234,10 @@ private const val TAG = "EmailPassword"
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "createUserWithEmail:success")
                         Toast.makeText(context,"Account created", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(context, LoginActivity::class.java)
-                        context.startActivity(intent)
-                        (context as Activity).finish()
+                        navController.navigate(Screen.Home.route)
+//                        val intent = Intent(context, LoginActivity::class.java)
+//                        context.startActivity(intent)
+//                        (context as Activity).finish()
 
                         val user = auth.currentUser
                         updateUI(user)
@@ -234,6 +251,8 @@ private const val TAG = "EmailPassword"
                 }
         }
     }
+
+
 
 
 

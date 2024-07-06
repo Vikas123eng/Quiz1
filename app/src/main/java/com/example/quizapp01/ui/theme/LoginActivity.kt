@@ -3,12 +3,14 @@ package com.example.quizapp01.ui.theme
 import android.app.Activity
 import android.os.Bundle
 import android.util.Log
+import android.view.Surface
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -59,7 +61,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.quizapp01.R
-import com.example.quizapp01.ui.theme.ui.login.UserProfileScreen
+import com.example.quizapp01.ui.theme.ui.login.Screen
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignIn.*
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -73,50 +75,49 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 
-private lateinit var auth: FirebaseAuth
+//private lateinit var auth: FirebaseAuth
 
-class LoginActivity : ComponentActivity() {
-    private lateinit var mGoogleSignInClient: GoogleSignInClient
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        auth = Firebase.auth
-        val gso = Builder(DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.client_id))
-            .requestEmail()
-            .build()
-
-
-        mGoogleSignInClient = getClient(this, gso)
-
-        setContent {
-            QuizApp01Theme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = Color.White
-                ) {
-                   val navController = rememberNavController()
-                    NavHost(navController = navController, startDestination = "login") {
-                        composable("login") {
-                            LoginScreen(navController=navController,mGoogleSignInClient)
-                        }
-                        composable("home") {
-                            ScaffoldExample(navController=navController)
-                        }
-                        composable("signup") {
-                            SignUpScreen(navController=navController)
-                        }
-                        composable("userdata"){
-                            UserProfileScreen(navController=navController)
-                        }
-
-
-                    }
-                }
-            }
-        }
-    }
-}
-
+//class LoginActivity : ComponentActivity() {
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        auth = Firebase.auth
+//        val gso = Builder(DEFAULT_SIGN_IN)
+//            .requestIdToken(getString(R.string.client_id))
+//            .requestEmail()
+//            .build()
+//
+//
+//        mGoogleSignInClient = getClient(this, gso)
+//
+//        setContent {
+//            QuizApp01Theme {
+//                Surface(
+//                    modifier = Modifier.fillMaxSize(),
+//                    color = Color.White
+//                ) {
+//                    LoginScreen(navController = naturalOrder<>(), mGoogleSignInClient = )
+////                   val navController = rememberNavController()
+////                    NavHost(navController = navController, startDestination = "login") {
+////                        composable("login") {
+////                            LoginScreen(navController=navController,mGoogleSignInClient)
+////                        }
+////                        composable("home") { HomeScreen(navController=navController)
+////                        }
+////                        composable("signup") {
+////                            SignUpScreen(navController=navController)
+////                        }
+////                        composable("userdata"){
+////                            UserProfileScreen(navController=navController)
+////                        }
+//
+//
+//              //      }
+//                }
+//            }
+//        }
+//    }
+//}
+private const val TAG = "EmailPassword"
 
 @Composable
 fun LoginScreen(navController: NavController,mGoogleSignInClient: GoogleSignInClient) {
@@ -125,6 +126,7 @@ fun LoginScreen(navController: NavController,mGoogleSignInClient: GoogleSignInCl
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var isPasswordVisible by remember { mutableStateOf(false) }
+    val auth = Firebase.auth
     val context = LocalContext.current
 
     val signInLauncher = rememberLauncherForActivityResult(
@@ -157,163 +159,193 @@ fun LoginScreen(navController: NavController,mGoogleSignInClient: GoogleSignInCl
             }
         }
     )
-    Column(
-        modifier = Modifier.padding(23.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-               OutlinedTextField(    //....................Email..........................//
-            value = email,
-            onValueChange = { email = it },
-            label = { Text(text = "Email") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 4.dp),
-            leadingIcon = {
-                Icon(Icons.Default.Email, contentDescription = "Email Icon")
-            },
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Email,
-                autoCorrect = true,
-                imeAction = ImeAction.Next,
-
-            )
-        )
-
-        OutlinedTextField(  //....................Password..........................//
-            value = password,
-            onValueChange = { password = it },
-            label = { Text(text = "Password") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 4.dp),
-            leadingIcon = {
-                Icon(Icons.Default.Lock, contentDescription = "Password Icon")
-            },
-            trailingIcon = {
-                IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
-                    Icon(
-                        imageVector = if (isPasswordVisible) Icons.Default.Visibility
-                        else Icons.Default.VisibilityOff,
-                        contentDescription = "Visibility Toggle"
-                    )
-                }
-            },
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Done,
-            ),
-            visualTransformation = if (isPasswordVisible) VisualTransformation.None
-            else PasswordVisualTransformation()
-        )
-
-        Button(  //....................Login Button..........................//
-            onClick = { signIn(email, password, navController) },
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(
-                Electric_Blue
-            )
+    Surface(color = Color.White,
+        modifier = Modifier.fillMaxSize()
+            .background(Color.Black)
         ) {
-            Text(text = "Login")
-        }
 
-//................................................Login Ends....................................//
-        Row {   //..............Navigation to signup and password reset .......................//
-            TextButton(onClick = {
-                navController.navigate("signup")
-            }) {
-                Text(text = "Don't have an account?")
-            }
 
-            TextButton(onClick = {
-                if (email.isNotEmpty()) {
-                    auth.sendPasswordResetEmail(email)
+        Column(
+            modifier = Modifier.padding(23.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            OutlinedTextField(    //....................Email..........................//
+                value = email,
+                onValueChange = { email = it },
+                label = { Text(text = "Email") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp),
+                leadingIcon = {
+                    Icon(Icons.Default.Email, contentDescription = "Email Icon")
+                },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Email,
+                    autoCorrect = true,
+                    imeAction = ImeAction.Next,
+
+                    )
+            )
+
+            OutlinedTextField(  //....................Password..........................//
+                value = password,
+                onValueChange = { password = it },
+                label = { Text(text = "Password") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp),
+                leadingIcon = {
+                    Icon(Icons.Default.Lock, contentDescription = "Password Icon")
+                },
+                trailingIcon = {
+                    IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
+                        Icon(
+                            imageVector = if (isPasswordVisible) Icons.Default.Visibility
+                            else Icons.Default.VisibilityOff,
+                            contentDescription = "Visibility Toggle"
+                        )
+                    }
+                },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done,
+                ),
+                visualTransformation = if (isPasswordVisible) VisualTransformation.None
+                else PasswordVisualTransformation()
+            )
+
+            Button(  //....................Login Button..........................//
+                onClick = {
+                    if (email.isEmpty() || password.isEmpty()) {
+                        Log.d(TAG, "signInWithEmail:null")
+                        Toast.makeText(
+                            navController.context,
+                            "Enter the credentials",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else auth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
-                                Toast.makeText(context, "Password reset email sent!", Toast.LENGTH_SHORT).show()
+                                Log.d(TAG, "signInWithEmail:success")
+                                Toast.makeText(
+                                    navController.context,
+                                    "Logging in",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                navController.navigate(Screen.Userdata.route)
+                                updateUI(auth.currentUser)
                             } else {
-                                Toast.makeText(context, "Error sending password reset email", Toast.LENGTH_SHORT).show()
+                                Log.w(TAG, "signInWithEmail:failure", task.exception)
+                                Toast.makeText(
+                                    navController.context,
+                                    "Authentication failed.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                updateUI(null)
                             }
                         }
-                } else {
-                    Toast.makeText(context, "Please enter your email", Toast.LENGTH_SHORT).show()
-                }
-            }) {
-                Text(text = "Forgot Password?")
-            }
-        }
-
-
-        Spacer(modifier = Modifier.padding(8.dp))
-        Canvas(
-            Modifier
-                .fillMaxWidth()
-                .height(1.dp)
-        ) {
-            drawLine(
-                color = Color.Black,
-                start = Offset(0f, 0f),
-                end = Offset(size.width, 0f)
-            )
-        }
-
-
-
-        Box(   //..................Google Sign In ...........................................//
-            Modifier.clickable {
-                signInLauncher.launch(mGoogleSignInClient.signInIntent)
-            }
-        ) {
-            Column(
-                modifier = Modifier,
-                horizontalAlignment = Alignment.CenterHorizontally
+                },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    Electric_Blue
+                )
             ) {
-                Spacer(modifier = Modifier.padding(2.dp))
+                Text(text = "Login")
+            }
 
-                Row(
+//................................................Login Ends....................................//
+            Row {   //..............Navigation to signup and password reset .......................//
+                TextButton(onClick = {
+                    navController.navigate(Screen.SignUp.route)
+                }) {
+                    Text(text = "Don't have an account?")
+                }
+
+                TextButton(onClick = {
+                    if (email.isNotEmpty()) {
+                        auth.sendPasswordResetEmail(email)
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    Toast.makeText(
+                                        context,
+                                        "Password reset email sent!",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        "Error sending password reset email",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+                    } else {
+                        Toast.makeText(context, "Please enter your email", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }) {
+                    Text(text = "Forgot Password?")
+                }
+            }
+
+
+            Spacer(modifier = Modifier.padding(8.dp))
+            Canvas(
+                Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+            ) {
+                drawLine(
+                    color = Color.Black,
+                    start = Offset(0f, 0f),
+                    end = Offset(size.width, 0f)
+                )
+            }
+
+
+
+            Box(   //..................Google Sign In ...........................................//
+                Modifier.clickable {
+                    signInLauncher.launch(mGoogleSignInClient.signInIntent)
+                }
+            ) {
+                Column(
                     modifier = Modifier,
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Icon(
-                        imageVector = ImageVector.Companion.vectorResource(id = R.drawable.google_icon),
-                        contentDescription = "Google Icon",
-                        tint = Color.Unspecified,
-                        modifier = Modifier.size(60.dp)
-                    )
+                    Spacer(modifier = Modifier.padding(2.dp))
 
-                    Text(
-                        text = "Sign In with Google", modifier = Modifier.padding(10.dp, 0.dp),
-                        color = Purple40, fontWeight = FontWeight.Bold
-                    )
+                    Row(
+                        modifier = Modifier,
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = ImageVector.Companion.vectorResource(id = R.drawable.google_icon),
+                            contentDescription = "Google Icon",
+                            tint = Color.Unspecified,
+                            modifier = Modifier.size(60.dp)
+                        )
+
+                        Text(
+                            text = "Sign In with Google", modifier = Modifier.padding(10.dp, 0.dp),
+                            color = Purple40, fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
             }
         }
+
+
     }
 }
     //............Login Screen End.............................................//
 
 
-private const val TAG = "EmailPassword"
-fun signIn(email: String, password: String, navController: NavController) {
-    if (email.isEmpty() || password.isEmpty()) {
-        Log.d(TAG, "signInWithEmail:null")
-        Toast.makeText(navController.context, "Enter the credentials", Toast.LENGTH_SHORT).show()
-    } else {
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d(TAG, "signInWithEmail:success")
-                    Toast.makeText(navController.context, "Logging in", Toast.LENGTH_SHORT).show()
-                    navController.navigate("userdata")
-                    updateUI(auth.currentUser)
-                } else {
-                    Log.w(TAG, "signInWithEmail:failure", task.exception)
-                    Toast.makeText(navController.context, "Authentication failed.", Toast.LENGTH_SHORT).show()
-                    updateUI(null)
-                }
-            }
-    }
+
+fun signIn(email: String, password: String,navController: NavController) {
+
 }
 
 

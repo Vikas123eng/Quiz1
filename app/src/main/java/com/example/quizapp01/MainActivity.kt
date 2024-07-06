@@ -6,20 +6,30 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.example.quizapp01.ui.theme.Home
-import com.example.quizapp01.ui.theme.LoginActivity
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.quizapp01.ui.theme.HomeScreen
 import com.example.quizapp01.ui.theme.QuizApp01Theme
+import com.example.quizapp01.ui.theme.SignUpScreen
 import com.example.quizapp01.ui.theme.SplashScreen
 import com.example.quizapp01.ui.theme.data.Quiz
+import com.example.quizapp01.ui.theme.ui.login.Screen
+import com.example.quizapp01.ui.theme.ui.login.UserDataScreen
+import com.google.android.gms.auth.api.signin.GoogleSignIn.getClient
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions.Builder
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions.DEFAULT_SIGN_IN
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import com.example.quizapp01.ui.theme.LoginScreen as LoginScreen
 
 
 class MainActivity : ComponentActivity() {
-//private lateinit var firestore: FirebaseFirestore
+    private lateinit var mGoogleSignInClient: GoogleSignInClient
 //    private fun setUpFirestore(){
 //
 //         firestore=FirebaseFirestore.getInstance()
@@ -41,31 +51,65 @@ class MainActivity : ComponentActivity() {
         val auth: FirebaseAuth?
         auth = Firebase.auth
         val currentUser = auth.currentUser
-
+        val gso = Builder(DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.client_id))
+            .requestEmail()
+            .build()
+        mGoogleSignInClient = getClient(this, gso)
         setContent {
             QuizApp01Theme {
-                Log.d("Debug","Splash1")
-                    SplashScreen(onTimeOut = {
-                                   // setUpFirestore()
-                        if (currentUser != null) {
-                            startActivity(Intent(this@MainActivity, Home::class.java))
-                           finish()
-                        } else {
-                            startActivity(Intent(this@MainActivity, LoginActivity::class.java))
-                            finish()
+//                    SplashScreen(onTimeOut = {
+//                                   // setUpFirestore()
+//                        if (currentUser != null) {
+//
+//                           finish()
+//                        } else {
+//                            startActivity(Intent(this@MainActivity, LoginActivity::class.java))
+//                            finish()
+//
+//                        }
+//                    }
+//
+//
+//                    )
 
+                val navController = rememberNavController()
+                NavHost(navController = navController, startDestination = Screen.Splash.route) {
+                    composable(Screen.Splash.route) {
+                        SplashScreen(onTimeOut = {
+                            if (currentUser != null) {
+                                navController.navigate(Screen.Home.route)
+                            } else {
+                                navController.navigate(Screen.Login.route)
+
+                            }
                         }
+                        )
+
+                    }
+                    composable(Screen.Home.route) {
+                        HomeScreen(navController = navController)
+                    }
+                    composable(Screen.Login.route)
+                    {
+                        LoginScreen(
+                            navController = navController,
+                            mGoogleSignInClient = mGoogleSignInClient
+                        )
+                    }
+                    composable(Screen.SignUp.route){
+                        SignUpScreen(navController = navController)
+                    }
+                    composable(Screen.Userdata.route){
+                        UserDataScreen(navController = navController)
                     }
 
-
-                    )
-
+                }//NavHost end
 
 
-                }
             }
-
 
 
         }
     }
+}

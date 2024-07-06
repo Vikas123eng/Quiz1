@@ -31,19 +31,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.theme.LoginActivity"
-            android:label="Login"
-            android:theme="@style/Theme.QuizApp01" />
-        <activity
-            android:name=".ui.theme.SignUp"
-            android:label="SignUp"
-            android:theme="@style/Theme.QuizApp01" />
-        <activity android:name=".ui.theme.Home"
-            android:label="Home"
-            android:theme="@style/Theme.QuizApp01">
+<!--        <activity-->
+<!--            android:name=".ui.theme.LoginActivity"-->
+<!--            android:label="Login"-->
+<!--            android:theme="@style/Theme.QuizApp01" />-->
+<!--        <activity-->
+<!--            android:name=".ui.theme.SignUp"-->
+<!--            android:label="SignUp"-->
+<!--            android:theme="@style/Theme.QuizApp01" />-->
+<!--        <activity android:name=".ui.theme.Home"-->
+<!--            android:label="Home"-->
+<!--            android:theme="@style/Theme.QuizApp01">-->
 
-        </activity>
+<!--        </activity>-->
     </application>
 
 </manifest>
