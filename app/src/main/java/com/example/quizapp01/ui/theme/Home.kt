@@ -23,8 +23,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.BottomNavigation
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.LocalContentColor
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Help
 import androidx.compose.material.icons.automirrored.filled.Logout
@@ -48,6 +52,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Scaffold
@@ -57,6 +65,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.rememberDrawerState
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -103,275 +112,277 @@ fun HomeScreen(navController: NavController) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
 
-    ModalNavigationDrawer(
+//    ModalNavigationDrawer(
+//
+//        gesturesEnabled = true,
+//        drawerState = drawerState,
+//        drawerContent = {
+//
+//            ModalDrawerSheet(
+//                drawerContainerColor = Color.White,
+//                modifier = Modifier
+//                    .width(280.dp)
+//            // Set the drawer width
+//            ) {
+//
+//                Column {
+//                    Box(
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .background(Color.Black)
+//                            .height(159.dp)
+//                            .padding(12.dp),
+//                        contentAlignment = Alignment.TopStart
+//                    ) {
+//                        Column {
+//                            Box(
+//                                modifier = Modifier
+//                                    .size(90.dp)
+//                                    .clip(CircleShape)
+//                                    .background(Color.White)
+//                                    .border(
+//                                        BorderStroke(3.dp, Color.White),
+//                                        CircleShape
+//                                    )
+//                            ) {
+//                                AsyncImage(
+//                                    model = ImageRequest.Builder(LocalContext.current).data(data = logo)
+//                                        .apply(block = fun ImageRequest.Builder.() {
+//                                            crossfade(true)
+//                                            size(Size.ORIGINAL) // Scale down the image to fit the required size
+//                                        }).build(),
+//                                    contentDescription = null,
+//                                    modifier = Modifier
+//                                        .fillMaxSize()
+//                                        .clip(CircleShape)
+//                                )
+//                            }
+//                            Spacer(modifier = Modifier.height(4.dp))
+//                            Column {
+//                                Text(
+//                                    text = "Vikas Ravidas",
+//                                    style = TextStyle(
+//                                        color = Color.White,
+//                                        fontSize = 17.sp
+//                                    )
+//                                )
+//                                Spacer(modifier = Modifier.height(4.dp))
+//                                Text(
+//                                    text = "vikasravidas789@gmail.com",
+//                                    style = TextStyle(
+//                                        color = Color.White,
+//                                        fontSize = 14.sp,
+//                                        fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
+//                                    )
+//                                )
+//                            }
+//                        }
+//                    }
+//
+//                    HorizontalDivider()
+//
+//
+//                    NavigationDrawerItem(
+//                        colors = NavigationDrawerItemDefaults.colors(
+//                            selectedContainerColor = Color.Gray,
+//                            unselectedContainerColor = Color.White
+//                        ),
+//                        label = { Text(text = "Change Class",style = TextStyle(color = Color.Black)) },
+//                        selected = false,
+//                        icon = {
+//                            Icon(
+//                                imageVector = Icons.Default.Class,
+//                                contentDescription = "Home",
+//                                tint = Color.Black
+//
+//                            )
+//                        },
+//                        onClick = {
+//                            scope.launch {
+//                                drawerState.close()
+//                            }
+//                        }
+//                    )
+//
+//                    NavigationDrawerItem(
+//                        colors = NavigationDrawerItemDefaults.colors(
+//                            selectedContainerColor = Color.Gray,
+//                            unselectedContainerColor = Color.White
+//                        ),
+//                        label = { Text(text = "Share App",style = TextStyle(color = Color.Black)) },
+//                        selected = false,
+//                        icon = {
+//                            Icon(
+//                                imageVector = Icons.Default.Share,
+//                                contentDescription = "Share App",
+//                                tint = Color.Black
+//
+//                            )
+//                        },
+//                        onClick = {
+//                            scope.launch {
+//                                drawerState.close()
+//                            }
+//                        }
+//                    )
+//
+//                        NavigationDrawerItem(
+//                            colors = NavigationDrawerItemDefaults.colors(
+//                                selectedContainerColor = Color.Gray,
+//                                unselectedContainerColor = Color.White
+//                            ),
+//                            label = { Text(text = "Need Help",style = TextStyle(color = Color.Black)) },
+//                            selected = false,
+//                            icon = {
+//                                Icon(
+//                                    imageVector = Icons.AutoMirrored.Filled.Help,
+//                                    contentDescription = "Contact Us?",
+//                                    tint = Color.Black
+//
+//                                )
+//                            },
+//                            onClick = {
+//                                scope.launch {
+//                                    drawerState.close()
+//                                }
+//                            }
+//                        )
+//                        NavigationDrawerItem(
+//                            colors = NavigationDrawerItemDefaults.colors(
+//                                selectedContainerColor = Color.Gray,
+//                                unselectedContainerColor = Color.White
+//                            ),
+//                            label = { Text(text = "Logout", style = TextStyle(color = Color.Black)) },
+//                            selected = false,
+//                            icon = {
+//                                Icon(
+//                                    imageVector = Icons.AutoMirrored.Filled.Logout,
+//                                    contentDescription = "Logout",
+//                                   tint = Color.Black
+//                                )
+//                            },
+//                            onClick = {
+//                                Firebase.auth.signOut()
+//                                googleSignInClient.signOut().addOnCompleteListener {
+//                                    Toast.makeText(context, "Logging out...", Toast.LENGTH_SHORT)
+//                                        .show()
+//                                    navController.navigate(Screen.Login.route)
+//                                }
+//                            }
+//                        )
+//
+//                }
+//
+//        }
+//}
+//    ) {
+//        Scaffold(
+//            containerColor = Color.White,
+//            topBar = {
+//                TopAppBar(
+//                    colors = topAppBarColors(
+//                        containerColor = Color.White,
+//                    ),
+//                    title = {
+//                        Text(
+//                            text = "App of War",
+//                            style = TextStyle(
+//                                color = Color.Black,
+//                                fontSize = 20.sp
+//                            )
+//                        )
+//                    },
+//                    navigationIcon = {
+//                        IconButton(onClick = {
+//                            scope.launch {
+//                                drawerState.open()
+//                            }
+//                        }) {
+//                            Icon(
+//                                imageVector = Icons.Filled.Menu,
+//                                contentDescription = "Menu",
+//                                modifier = Modifier.size(30.dp),
+//                                Color.Black
+//                            )
+//                        }
+//                    },
+//                    actions = {
+//                        IconButton(onClick = {
+//                            Toast.makeText(context, "No new notifications", Toast.LENGTH_SHORT).show()
+//                        }) {
+//                            Icon(
+//                                imageVector = Icons.Default.Notifications,
+//                                contentDescription = "Notifications",
+//                                modifier = Modifier.size(30.dp),
+//                                Color.Black
+//                            )
+//                        }
+//                    }
+//                )
+//            },
+//            bottomBar = { BottomNavigationBar(navController) }
+//        )
+//
 
-        gesturesEnabled = true,
-        drawerState = drawerState,
-        drawerContent = {
-
-            ModalDrawerSheet(
-                drawerContainerColor = Color.White,
-                modifier = Modifier
-                    .width(280.dp)
-            // Set the drawer width
-            ) {
-
-                Column {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(Color.Black)
-                            .height(159.dp)
-                            .padding(12.dp),
-                        contentAlignment = Alignment.TopStart
-                    ) {
-                        Column {
-                            Box(
-                                modifier = Modifier
-                                    .size(90.dp)
-                                    .clip(CircleShape)
-                                    .background(Color.White)
-                                    .border(
-                                        BorderStroke(3.dp, Color.White),
-                                        CircleShape
-                                    )
-                            ) {
-                                AsyncImage(
-                                    model = ImageRequest.Builder(LocalContext.current).data(data = logo)
-                                        .apply(block = fun ImageRequest.Builder.() {
-                                            crossfade(true)
-                                            size(Size.ORIGINAL) // Scale down the image to fit the required size
-                                        }).build(),
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .clip(CircleShape)
-                                )
-                            }
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Column {
-                                Text(
-                                    text = "Vikas Ravidas",
-                                    style = TextStyle(
-                                        color = Color.White,
-                                        fontSize = 17.sp
-                                    )
-                                )
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text(
-                                    text = "vikasravidas789@gmail.com",
-                                    style = TextStyle(
-                                        color = Color.White,
-                                        fontSize = 14.sp,
-                                        fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
-                                    )
-                                )
-                            }
-                        }
-                    }
-
-                    HorizontalDivider()
-
-
-                    NavigationDrawerItem(
-                        colors = NavigationDrawerItemDefaults.colors(
-                            selectedContainerColor = Color.Gray,
-                            unselectedContainerColor = Color.White
-                        ),
-                        label = { Text(text = "Change Class",style = TextStyle(color = Color.Black)) },
-                        selected = false,
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Default.Class,
-                                contentDescription = "Home",
-                                tint = Color.Black
-
-                            )
-                        },
-                        onClick = {
-                            scope.launch {
-                                drawerState.close()
-                            }
-                        }
-                    )
-
-                    NavigationDrawerItem(
-                        colors = NavigationDrawerItemDefaults.colors(
-                            selectedContainerColor = Color.Gray,
-                            unselectedContainerColor = Color.White
-                        ),
-                        label = { Text(text = "Share App",style = TextStyle(color = Color.Black)) },
-                        selected = false,
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Default.Share,
-                                contentDescription = "Share App",
-                                tint = Color.Black
-
-                            )
-                        },
-                        onClick = {
-                            scope.launch {
-                                drawerState.close()
-                            }
-                        }
-                    )
-
-                        NavigationDrawerItem(
-                            colors = NavigationDrawerItemDefaults.colors(
-                                selectedContainerColor = Color.Gray,
-                                unselectedContainerColor = Color.White
-                            ),
-                            label = { Text(text = "Need Help",style = TextStyle(color = Color.Black)) },
-                            selected = false,
-                            icon = {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.Help,
-                                    contentDescription = "Contact Us?",
-                                    tint = Color.Black
-
-                                )
-                            },
-                            onClick = {
-                                scope.launch {
-                                    drawerState.close()
-                                }
-                            }
-                        )
-                        NavigationDrawerItem(
-                            colors = NavigationDrawerItemDefaults.colors(
-                                selectedContainerColor = Color.Gray,
-                                unselectedContainerColor = Color.White
-                            ),
-                            label = { Text(text = "Logout", style = TextStyle(color = Color.Black)) },
-                            selected = false,
-                            icon = {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.Logout,
-                                    contentDescription = "Logout",
-                                   tint = Color.Black
-                                )
-                            },
-                            onClick = {
-                                Firebase.auth.signOut()
-                                googleSignInClient.signOut().addOnCompleteListener {
-                                    Toast.makeText(context, "Logging out...", Toast.LENGTH_SHORT)
-                                        .show()
-                                    navController.navigate(Screen.Login.route)
-                                }
-                            }
-                        )
-
-                }
-
-        }
-}
-    ) {
-        Scaffold(
-            containerColor = Color.White,
-            topBar = {
-                TopAppBar(
-                    colors = topAppBarColors(
-                        containerColor = Color.White,
-                    ),
-                    title = {
-                        Text(
-                            text = "App of War",
-                            style = TextStyle(
-                                color = Color.Black,
-                                fontSize = 20.sp
-                            )
-                        )
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = {
-                            scope.launch {
-                                drawerState.open()
-                            }
-                        }) {
-                            Icon(
-                                imageVector = Icons.Filled.Menu,
-                                contentDescription = "Menu",
-                                modifier = Modifier.size(30.dp),
-                                Color.Black
-                            )
-                        }
-                    },
-                    actions = {
-                        IconButton(onClick = {
-                            Toast.makeText(context, "No new notifications", Toast.LENGTH_SHORT).show()
-                        }) {
-                            Icon(
-                                imageVector = Icons.Default.Notifications,
-                                contentDescription = "Notifications",
-                                modifier = Modifier.size(30.dp),
-                                Color.Black
-                            )
-                        }
-                    }
-                )
-            },
-            bottomBar = { BottomNavigationBar(navController) }
-        ) { innerPadding ->
-            Box(modifier = Modifier
+    Scaffold(containerColor = Color.White) { innerPadding ->
+        Box(
+            modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-            ) {
-                Column {
-                    ActionButtonsRow()
-                        //Spacer(modifier = Modifier.height(6.dp))
-                    QuoteCarousel(
-                        quotes = listOf(
-                            "“The Best Brains of the nation may be found on the last benches of the classroom.”",
-                            "“Education is the most powerful weapon which you can use to change the world.”",
-                            "“The beautiful thing about learning is that no one can take it away from you.”"
-                        )
+        ) {
+            Column {
+                ActionButtonsRow()
+              //  Spacer(modifier = Modifier.height(6.dp))
+                QuoteCarousel(
+                    quotes = listOf(
+                        "“The Best Brains of the nation may be found on the last benches of the classroom.”",
+                        "“Education is the most powerful weapon which you can use to change the world.”",
+                        "“The beautiful thing about learning is that no one can take it away from you.”"
                     )
-                    ScrollContent(innerPadding)
-                }
+                )
+                Spacer(modifier = Modifier.height(7.dp))
+                ScrollContent(innerPadding)
             }
         }
+//        }
+//    }
     }
 }
-
-@Composable
-fun BottomNavigationBar(navController: NavController) {
-    BottomNavigation(
-        backgroundColor = Color.White,
-        contentColor = Color.Black,
-        modifier = Modifier.height(39.dp)
-    ) {
-        BottomNavigationItem(
-
-            icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
-            label = { Text("Home", style = TextStyle(
-                fontSize = 12.sp
-            )
-            ) },
-            selected = true,
-            selectedContentColor = Color.Gray,
-          // Set this to true if this is the selected tab
-            onClick = { /* Handle Home navigation */ }
-        )
-        BottomNavigationItem(
-            icon = { Icon(Icons.Default.BarChart, contentDescription = "Performance") },
-            label = { Text("Performance"
-                ,style = TextStyle(
-                    fontSize = 12.sp)) },
-            selected = false, // Set this to true if this is the selected tab
-            onClick = { /* Handle Performance navigation */ }
-        )
-        BottomNavigationItem(
-            icon = { Icon(Icons.Default.Leaderboard, contentDescription = "Leaderboard") },
-            label = { Text("Leaderboard"
-                ,style = TextStyle(
-                    fontSize = 12.sp)) },
-            selected = false, // Set this to true if this is the selected tab
-            onClick = { /* Handle Leaderboard navigation */ }
-        )
-    }
-}
-
+//@Composable
+//fun BottomNavigationBar(navController: NavController) {
+//    val items = listOf("Home", "Performance", "Leaderboard")
+//    val icons = listOf(Icons.Default.Home, Icons.Default.BarChart, Icons.Default.Leaderboard)
+//    var selectedIndex by remember { mutableIntStateOf(0) }
+//
+//    BottomNavigation(
+//        backgroundColor = Color.White,
+//        modifier = Modifier.height(39.dp)
+//    ) {
+//        items.forEachIndexed { index, item ->
+//            BottomNavigationItem(
+//                icon = { Icon(icons[index], contentDescription = item) },
+//                label = {
+//                    Text(
+//                        text = item,
+//                        style = TextStyle(
+//                            fontSize = 12.sp
+//                        )
+//                    )
+//                },
+//                selected = selectedIndex == index,
+//                unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.disabled),
+//                onClick = {
+//                    selectedIndex = index
+//                    when (item) {
+//                        "Home" -> navController.navigate(Screen.Home.route)
+//                        "Performance" -> navController.navigate(Screen.Performance.route)
+//                        "Leaderboard" -> navController.navigate(Screen.Leaderboard.route)
+//                    }
+//                }
+//            )
+//        }
+//    }
+//}
 @Composable
 fun ActionButtonsRow() {
     Row(
@@ -458,14 +469,47 @@ fun ScrollContent(innerPadding: PaddingValues) {
         Course(imageRes = maths, "Mathematics"),
         Course(imageRes = biology, "Biology")
     )
+    Box(contentAlignment = Alignment.Center) {
+        Text(
+            text = "Test Your Ability",
+            style = TextStyle(
+                fontSize = 24.sp,
+                color = Color.Black,
+                fontWeight = FontWeight.Bold
+            ),
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                // .padding(start = 30.dp, top = 0.dp, end = 0.dp, bottom = 2.dp)
+                .fillMaxWidth() // Ensure the text takes the full width available
+            //  .align(alignment = Alignment.CenterHorizontally) // Center the text horizontally within the Box
+        )
+    }
+    Spacer(modifier = Modifier.height(5.dp))
+//    Box(contentAlignment = Alignment.Center)
+//    {
+//        Text(text = "Test You Ability",
+//            style = TextStyle(fontSize = 24.sp, color = Color.Black,
+//                fontWeight = FontWeight.Bold),
+//               textAlign = TextAlign.Center,
+//                            modifier = Modifier
+//                  .align(Alignment.TopCenter)
+//                                .padding(10.dp,0.dp,0.dp,2.dp)
+//        )
+//    }
+
+
 
     Box(modifier = Modifier.fillMaxSize()) {
-        Text(text = "Test You Ability", style = TextStyle(fontSize = 24.sp, color = Color.Black,
-            fontWeight = FontWeight.Bold),
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(30.dp)
-        )
+
+//            Text(text = "Test You Ability",
+//                //        ,
+//                //        style = TextStyle(fontSize = 24.sp, color = Color.Black,
+////            fontWeight = FontWeight.Bold),
+//                modifier = Modifier
+//                    .align(Alignment.TopCenter)
+//            )
+//
+
         LazyColumn(
             modifier = Modifier
                 .padding(innerPadding)

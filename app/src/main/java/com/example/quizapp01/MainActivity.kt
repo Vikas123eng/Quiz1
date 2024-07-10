@@ -14,6 +14,9 @@ import com.example.quizapp01.ui.theme.QuizApp01Theme
 import com.example.quizapp01.ui.theme.SignUpScreen
 import com.example.quizapp01.ui.theme.SplashScreen
 import com.example.quizapp01.ui.theme.data.Quiz
+import com.example.quizapp01.ui.theme.ui.login.LeaderboardScreen
+import com.example.quizapp01.ui.theme.ui.login.MainScreen
+import com.example.quizapp01.ui.theme.ui.login.PerformanceScreen
 import com.example.quizapp01.ui.theme.ui.login.Screen
 import com.example.quizapp01.ui.theme.ui.login.UserDataScreen
 import com.google.android.gms.auth.api.signin.GoogleSignIn.getClient
@@ -63,7 +66,7 @@ class MainActivity : ComponentActivity() {
                     composable(Screen.Splash.route) {
                         SplashScreen(onTimeOut = {
                             if (currentUser != null) {
-                                navController.navigate(Screen.Home.route)
+                                navController.navigate(Screen.MainScreen.route)
                             } else {
                                 navController.navigate(Screen.Login.route)
 
@@ -71,6 +74,9 @@ class MainActivity : ComponentActivity() {
                         }
                         )
 
+                    }
+                    composable(Screen.MainScreen.route) {
+                        MainScreen(navController = navController)
                     }
                     composable(Screen.Home.route) {
                         HomeScreen(navController = navController)
@@ -87,6 +93,12 @@ class MainActivity : ComponentActivity() {
                     }
                     composable(Screen.Userdata.route){
                         UserDataScreen(navController = navController)
+                    }
+                    composable(Screen.Performance.route){
+                        PerformanceScreen(navController = navController)
+                    }
+                    composable(Screen.Leaderboard.route){
+                        LeaderboardScreen(navController=navController)
                     }
 
                 }//NavHost end

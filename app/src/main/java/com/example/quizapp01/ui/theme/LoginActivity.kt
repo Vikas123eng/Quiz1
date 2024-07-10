@@ -159,7 +159,7 @@ fun LoginScreen(navController: NavController,mGoogleSignInClient: GoogleSignInCl
                                             "Authentication Successful",
                                             Toast.LENGTH_SHORT
                                         ).show()
-                                        navController.navigate(Screen.Home.route)
+                                        navController.navigate(Screen.MainScreen.route)
                                     } else {
                                         Toast.makeText(
                                             context,
@@ -266,7 +266,7 @@ fun LoginScreen(navController: NavController,mGoogleSignInClient: GoogleSignInCl
                                     "Logging in",
                                     Toast.LENGTH_SHORT
                                 ).show()
-                                navController.navigate(Screen.Home.route)
+                                navController.navigate(Screen.MainScreen.route)
                                 updateUI(auth.currentUser)
                             } else {
                                 Log.w(TAG, "signInWithEmail:failure", task.exception)
