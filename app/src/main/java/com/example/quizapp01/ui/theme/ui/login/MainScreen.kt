@@ -1,6 +1,8 @@
 package com.example.quizapp01.ui.theme.ui.login
 
+import android.app.Activity
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -35,8 +37,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -55,9 +61,9 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.size.Size
 import com.example.quizapp01.ui.theme.HomeScreen
-import com.example.quizapp01.ui.theme.ui.common.TopAppBar
 import com.google.android.gms.auth.api.signin.GoogleSignIn.getClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions.DEFAULT_SIGN_IN
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
@@ -67,13 +73,33 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainScreen(navController: NavController) {
     val context = LocalContext.current
-    val logo = "https://i.ibb.co/8N8n4th/Design12.jpg"
+   // val logo = "https://i.ibb.co/8N8n4th/Design12.jpg"
     val scope = rememberCoroutineScope()
     val googleSignInClient = getClient(context, DEFAULT_SIGN_IN)
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val nestedNavController = rememberNavController()
     val navBackStackEntry by nestedNavController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+
+    var userName by remember { mutableStateOf("Loading...") }
+    var userEmail by remember { mutableStateOf("Loading...") }
+    var userPhotoUrl by remember { mutableStateOf<String?>(null) }
+    val auth: FirebaseAuth = Firebase.auth
+
+    // Fetch user details
+    LaunchedEffect(Unit) {
+        val currentUser = auth.currentUser
+        currentUser?.let {
+            userName = it.displayName ?: "Anonymous"
+            userEmail = it.email ?: "No Email"
+            userPhotoUrl = it.photoUrl?.toString()
+        }
+    }
+
+    BackHandler(enabled = currentRoute == Screen.Home.route) {
+        // Exit the app when back is pressed on the Home screen
+        (context as? Activity)?.finish()
+    }
     ModalNavigationDrawer(
 
         gesturesEnabled = true,
@@ -108,7 +134,7 @@ fun MainScreen(navController: NavController) {
                                     )
                             ) {
                                 AsyncImage(
-                                    model = ImageRequest.Builder(LocalContext.current).data(data = logo)
+                                    model = ImageRequest.Builder(LocalContext.current).data(data = userPhotoUrl)
                                         .apply(block = fun ImageRequest.Builder.() {
                                             crossfade(true)
                                             size(Size.ORIGINAL) // Scale down the image to fit the required size
@@ -122,7 +148,7 @@ fun MainScreen(navController: NavController) {
                             Spacer(modifier = Modifier.height(4.dp))
                             Column {
                                 Text(
-                                    text = "Vikas Ravidas",
+                                    text = userName,
                                     style = TextStyle(
                                         color = Color.White,
                                         fontSize = 17.sp
@@ -130,7 +156,7 @@ fun MainScreen(navController: NavController) {
                                 )
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
-                                    text = "vikasravidas789@gmail.com",
+                                    text = userEmail,
                                     style = TextStyle(
                                         color = Color.White,
                                         fontSize = 14.sp,

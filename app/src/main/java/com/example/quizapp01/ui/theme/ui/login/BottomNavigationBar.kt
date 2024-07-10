@@ -56,8 +56,20 @@ fun BottomNavigationBar(navController: NavController) {
                     selectedIndex = index
                     when (item) {
                         "Home" -> navController.navigate(Screen.Home.route)
+                        {
+                            popUpTo(navController.graph.startDestinationId)
+                            launchSingleTop = true
+                        }
                         "Performance" -> navController.navigate(Screen.Performance.route)
+                        {
+                            popUpTo(navController.graph.startDestinationId)
+                            launchSingleTop = true
+                        }
                         "Leaderboard" -> navController.navigate(Screen.Leaderboard.route)
+                        {
+                            popUpTo(navController.graph.startDestinationId)
+                            launchSingleTop = true
+                        }
                     }
                 }
             )

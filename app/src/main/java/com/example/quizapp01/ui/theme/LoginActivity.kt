@@ -267,6 +267,10 @@ fun LoginScreen(navController: NavController,mGoogleSignInClient: GoogleSignInCl
                                     Toast.LENGTH_SHORT
                                 ).show()
                                 navController.navigate(Screen.MainScreen.route)
+                                {
+                                    popUpTo(navController.graph.startDestinationId)
+                                    launchSingleTop = true
+                                }
                                 updateUI(auth.currentUser)
                             } else {
                                 Log.w(TAG, "signInWithEmail:failure", task.exception)
