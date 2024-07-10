@@ -64,18 +64,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.quizapp01.R
+import com.example.quizapp01.ui.theme.Electric_Blue
 import com.example.quizapp01.ui.theme.Purple40
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -118,13 +121,11 @@ fun UserDataScreen(navController: NavController) {
             )
 
             OutlinedTextField(
+                textStyle = TextStyle(color = Color.Black, fontSize = 16.sp),
                 value = className.value,
                 onValueChange = { className.value = it },
                 label = { Text("Class", color = Color.Black) },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                     Color.Black// Change the text color to blue
-                )
-                ,  keyboardOptions = KeyboardOptions.Default.copy(
+                  keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Decimal,
                     autoCorrect = true,
                     imeAction = ImeAction.Next,
@@ -133,12 +134,10 @@ fun UserDataScreen(navController: NavController) {
             )
 
             OutlinedTextField(
+                textStyle = TextStyle(color = Color.Black, fontSize = 16.sp),
                 value = username.value,
                 onValueChange = { username.value = it },
                 label = { Text("Username",color = Color.Black) },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    Color.Black// Change the text color to blue
-                ),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Text,
                     autoCorrect = true,
@@ -146,9 +145,14 @@ fun UserDataScreen(navController: NavController) {
 
                     )
             )
+Spacer(modifier = Modifier.size(16.dp))
 
             Button(
-                modifier = Modifier.padding(top = 16.dp),
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    Electric_Blue
+                ),
+                enabled = true,
                 onClick = {
                     // Save the user's details and navigate to the next screen
                     if (username.value.isNotEmpty() && className.value.isNotEmpty()) {
@@ -164,7 +168,15 @@ fun UserDataScreen(navController: NavController) {
 
                 }
             ) {
-                Text("Submit")
+                Text("Submit",
+                    style = TextStyle(
+                        fontSize = 20.sp,
+                        color = Color.Black,
+                        letterSpacing = .7.sp,
+                        fontWeight = FontWeight.Bold
+
+                    )
+                )
             }
         }
     }

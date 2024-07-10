@@ -30,6 +30,7 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -37,6 +38,9 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -49,12 +53,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -68,10 +75,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions.*
 import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.AdditionalUserInfo
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 
 
@@ -119,6 +128,7 @@ import com.google.firebase.ktx.Firebase
 //}
 private const val TAG = "EmailPassword"
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(navController: NavController,mGoogleSignInClient: GoogleSignInClient) {
 
@@ -128,6 +138,7 @@ fun LoginScreen(navController: NavController,mGoogleSignInClient: GoogleSignInCl
     var isPasswordVisible by remember { mutableStateOf(false) }
     val auth = Firebase.auth
     val context = LocalContext.current
+
 
     val signInLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
@@ -143,35 +154,54 @@ fun LoginScreen(navController: NavController,mGoogleSignInClient: GoogleSignInCl
                             Firebase.auth.signInWithCredential(credential)
                                 .addOnCompleteListener { authTask ->
                                     if (authTask.isSuccessful) {
-                                        Toast.makeText(context, "Authentication Successful", Toast.LENGTH_SHORT).show()
-                                        navController.navigate("userdata")
+                                        Toast.makeText(
+                                            context,
+                                            "Authentication Successful",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        navController.navigate(Screen.Home.route)
                                     } else {
-                                        Toast.makeText(context, "Authentication Failed: ${authTask.exception?.message}", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(
+                                            context,
+                                            "Authentication Failed: ${authTask.exception?.message}",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
                                     }
                                 }
                         } catch (e: ApiException) {
-                            Toast.makeText(context, "Google Sign-In Failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                context,
+                                "Google Sign-In Failed: ${e.message}",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     } else {
-                        Toast.makeText(context, "Google Sign-In Task Failed: ${signInTask.exception?.message}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            "Google Sign-In Task Failed: ${signInTask.exception?.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }
         }
     )
+    //............Login Screen Start.............................................//
+
     Surface(color = Color.White,
-        modifier = Modifier.fillMaxSize()
-            .background(Color.Black)
-        ) {
+        modifier = Modifier.fillMaxSize(),
+        contentColor = contentColorFor(backgroundColor = Color.Black),
+    ) {
 
 
         Column(
             modifier = Modifier.padding(23.dp),
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            OutlinedTextField(    //....................Email..........................//
+            OutlinedTextField( //....................Email..........................//
                 value = email,
+                textStyle = TextStyle(color = Color.Gray, fontSize = 16.sp),
                 onValueChange = { email = it },
                 label = { Text(text = "Email") },
                 modifier = Modifier
@@ -185,13 +215,14 @@ fun LoginScreen(navController: NavController,mGoogleSignInClient: GoogleSignInCl
                     autoCorrect = true,
                     imeAction = ImeAction.Next,
 
-                    )
+                    ),
             )
 
-            OutlinedTextField(  //....................Password..........................//
+            OutlinedTextField( //....................Password..........................//
                 value = password,
                 onValueChange = { password = it },
                 label = { Text(text = "Password") },
+                textStyle = TextStyle(color = Color.Gray, fontSize = 12.sp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 4.dp),
@@ -216,6 +247,8 @@ fun LoginScreen(navController: NavController,mGoogleSignInClient: GoogleSignInCl
             )
 
             Button(  //....................Login Button..........................//
+
+                enabled = true,
                 onClick = {
                     if (email.isEmpty() || password.isEmpty()) {
                         Log.d(TAG, "signInWithEmail:null")
@@ -233,7 +266,7 @@ fun LoginScreen(navController: NavController,mGoogleSignInClient: GoogleSignInCl
                                     "Logging in",
                                     Toast.LENGTH_SHORT
                                 ).show()
-                                navController.navigate(Screen.Userdata.route)
+                                navController.navigate(Screen.Home.route)
                                 updateUI(auth.currentUser)
                             } else {
                                 Log.w(TAG, "signInWithEmail:failure", task.exception)
@@ -242,6 +275,7 @@ fun LoginScreen(navController: NavController,mGoogleSignInClient: GoogleSignInCl
                                     "Authentication failed.",
                                     Toast.LENGTH_SHORT
                                 ).show()
+
                                 updateUI(null)
                             }
                         }
@@ -251,10 +285,19 @@ fun LoginScreen(navController: NavController,mGoogleSignInClient: GoogleSignInCl
                     Electric_Blue
                 )
             ) {
-                Text(text = "Login")
+                Text(text = "Login", style = TextStyle(
+                    fontSize = 18.sp,
+                    color = Color.Black,
+                    letterSpacing = .7.sp,
+                    fontWeight = FontWeight.Bold
+
+                )
+                )
             }
 
 //................................................Login Ends....................................//
+
+
             Row {   //..............Navigation to signup and password reset .......................//
                 TextButton(onClick = {
                     navController.navigate(Screen.SignUp.route)
@@ -344,9 +387,6 @@ fun LoginScreen(navController: NavController,mGoogleSignInClient: GoogleSignInCl
 
 
 
-fun signIn(email: String, password: String,navController: NavController) {
-
-}
 
 
 fun updateUI(user: FirebaseUser?) {

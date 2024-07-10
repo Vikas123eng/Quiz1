@@ -58,21 +58,6 @@ class MainActivity : ComponentActivity() {
         mGoogleSignInClient = getClient(this, gso)
         setContent {
             QuizApp01Theme {
-//                    SplashScreen(onTimeOut = {
-//                                   // setUpFirestore()
-//                        if (currentUser != null) {
-//
-//                           finish()
-//                        } else {
-//                            startActivity(Intent(this@MainActivity, LoginActivity::class.java))
-//                            finish()
-//
-//                        }
-//                    }
-//
-//
-//                    )
-
                 val navController = rememberNavController()
                 NavHost(navController = navController, startDestination = Screen.Splash.route) {
                     composable(Screen.Splash.route) {

@@ -39,12 +39,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -96,9 +100,9 @@ fun SignUpScreen(navController: NavController) {
     // ...
 
 
-    Surface(contentColor = Color.Black,
+    Surface(color = Color.White,
         modifier = Modifier.fillMaxSize()
-        .background(Color.White)
+        .background(Color.Black)
     )
              {
 
@@ -112,7 +116,7 @@ fun SignUpScreen(navController: NavController) {
 
 
             OutlinedTextField(
-
+    textStyle = TextStyle(color = Color.Gray, fontSize = 16.sp),
 
                 value = email,
                 onValueChange = { email = it },
@@ -132,6 +136,7 @@ fun SignUpScreen(navController: NavController) {
             )
 
             OutlinedTextField(
+                textStyle = TextStyle(color = Color.Gray, fontSize = 16.sp),
                 value = password,
                 onValueChange = { password = it },
                 label = { Text(text = "Password") },
@@ -158,6 +163,7 @@ fun SignUpScreen(navController: NavController) {
                 else PasswordVisualTransformation()
             )
             OutlinedTextField(
+                textStyle = TextStyle(color = Color.Gray, fontSize = 16.sp),
                 value = confirmpassword,
                 onValueChange = { confirmpassword = it },
                 label = { Text(text = "Confirm Password") },
@@ -201,7 +207,15 @@ fun SignUpScreen(navController: NavController) {
                 )
             )
             {
-                Text(text = "Sign Up")
+                Text(text = "Sign Up",
+                    style = TextStyle(
+                        color = Color.Black,
+                        fontSize = 18.sp,
+                        fontFamily = FontFamily.Default,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = .7.sp
+                    )
+                )
             }
 
 
@@ -226,11 +240,14 @@ private const val TAG = "EmailPassword"
 
         if (password.isEmpty() || confirmpassword.isEmpty() || email.isEmpty()) {
             Log.w(TAG, "Enter all the blanks")
-            Toast.makeText(context,"Fill the blanks", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context,"Enter the credentials", Toast.LENGTH_SHORT).show()
         } else {
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
+                    if(password != confirmpassword){
+                        Toast.makeText(context,"Password does not match", Toast.LENGTH_SHORT).show()
+                    }
+                    else if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "createUserWithEmail:success")
                         Toast.makeText(context,"Account created", Toast.LENGTH_SHORT).show()
@@ -245,7 +262,7 @@ private const val TAG = "EmailPassword"
                         // If sign in fails, display a message to the user.
 
                         Log.w(TAG, "createUserWithEmail:failure", task.exception)
-                        Toast.makeText(context,"Failed", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context,"Enter correct credentials", Toast.LENGTH_SHORT).show()
                         updateUI(null)
                     }
                 }
