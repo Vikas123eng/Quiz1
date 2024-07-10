@@ -99,6 +99,7 @@ dependencies {
     implementation ("androidx.navigation:navigation-ui-ktx:2.7.7")
     implementation("io.coil-kt:coil-compose:2.0.0")
     implementation("io.coil-kt:coil-svg:2.1.0")
+    implementation ("androidx.compose.material:material:1.4.3")
 
 
 }

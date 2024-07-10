@@ -23,14 +23,23 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Help
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.automirrored.filled.Notes
+import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.Class
+import androidx.compose.material.icons.filled.ContactMail
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Leaderboard
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -164,20 +173,63 @@ fun HomeScreen(navController: NavController) {
                     HorizontalDivider()
 
 
+                    NavigationDrawerItem(
+                        colors = NavigationDrawerItemDefaults.colors(
+                            selectedContainerColor = Color.Gray,
+                            unselectedContainerColor = Color.White
+                        ),
+                        label = { Text(text = "Change Class",style = TextStyle(color = Color.Black)) },
+                        selected = false,
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.Class,
+                                contentDescription = "Home",
+                                tint = Color.Black
+
+                            )
+                        },
+                        onClick = {
+                            scope.launch {
+                                drawerState.close()
+                            }
+                        }
+                    )
+
+                    NavigationDrawerItem(
+                        colors = NavigationDrawerItemDefaults.colors(
+                            selectedContainerColor = Color.Gray,
+                            unselectedContainerColor = Color.White
+                        ),
+                        label = { Text(text = "Share App",style = TextStyle(color = Color.Black)) },
+                        selected = false,
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.Share,
+                                contentDescription = "Share App",
+                                tint = Color.Black
+
+                            )
+                        },
+                        onClick = {
+                            scope.launch {
+                                drawerState.close()
+                            }
+                        }
+                    )
 
                         NavigationDrawerItem(
                             colors = NavigationDrawerItemDefaults.colors(
                                 selectedContainerColor = Color.Gray,
                                 unselectedContainerColor = Color.White
                             ),
-                            label = { Text(text = "Home",style = TextStyle(color = Color.Black)) },
+                            label = { Text(text = "Need Help",style = TextStyle(color = Color.Black)) },
                             selected = false,
                             icon = {
                                 Icon(
-                                    imageVector = Icons.Default.Home,
-                                    contentDescription = "Home",
+                                    imageVector = Icons.AutoMirrored.Filled.Help,
+                                    contentDescription = "Contact Us?",
                                     tint = Color.Black
-                                    
+
                                 )
                             },
                             onClick = {
@@ -258,7 +310,8 @@ fun HomeScreen(navController: NavController) {
                         }
                     }
                 )
-            }
+            },
+            bottomBar = { BottomNavigationBar(navController) }
         ) { innerPadding ->
             Box(modifier = Modifier
                 .padding(innerPadding)
@@ -278,6 +331,44 @@ fun HomeScreen(navController: NavController) {
                 }
             }
         }
+    }
+}
+
+@Composable
+fun BottomNavigationBar(navController: NavController) {
+    BottomNavigation(
+        backgroundColor = Color.White,
+        contentColor = Color.Black,
+        modifier = Modifier.height(39.dp)
+    ) {
+        BottomNavigationItem(
+
+            icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
+            label = { Text("Home", style = TextStyle(
+                fontSize = 12.sp
+            )
+            ) },
+            selected = true,
+            selectedContentColor = Color.Gray,
+          // Set this to true if this is the selected tab
+            onClick = { /* Handle Home navigation */ }
+        )
+        BottomNavigationItem(
+            icon = { Icon(Icons.Default.BarChart, contentDescription = "Performance") },
+            label = { Text("Performance"
+                ,style = TextStyle(
+                    fontSize = 12.sp)) },
+            selected = false, // Set this to true if this is the selected tab
+            onClick = { /* Handle Performance navigation */ }
+        )
+        BottomNavigationItem(
+            icon = { Icon(Icons.Default.Leaderboard, contentDescription = "Leaderboard") },
+            label = { Text("Leaderboard"
+                ,style = TextStyle(
+                    fontSize = 12.sp)) },
+            selected = false, // Set this to true if this is the selected tab
+            onClick = { /* Handle Leaderboard navigation */ }
+        )
     }
 }
 
@@ -371,14 +462,16 @@ fun ScrollContent(innerPadding: PaddingValues) {
     Box(modifier = Modifier.fillMaxSize()) {
         Text(text = "Test You Ability", style = TextStyle(fontSize = 24.sp, color = Color.Black,
             fontWeight = FontWeight.Bold),
-            modifier = Modifier.align(Alignment.TopCenter).padding(30.dp)
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(30.dp)
         )
         LazyColumn(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(16.dp),
+            contentPadding = PaddingValues(7.dp),
         ) {
             items(courses) { course ->
                 CourseCard(course = course)
@@ -391,8 +484,9 @@ fun ScrollContent(innerPadding: PaddingValues) {
 fun CourseCard(course: Course) {
     Card(
         shape = RoundedCornerShape(8.dp),
-        elevation = CardDefaults.cardElevation(4.dp),
-        modifier = Modifier.fillMaxWidth()
+        elevation = CardDefaults.cardElevation(2.dp),
+        modifier = Modifier.fillMaxWidth(),
+     //   colors = CardDefaults.cardColors(Color.White)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -406,8 +500,8 @@ fun CourseCard(course: Course) {
                     }).build(),
                 contentDescription = "null",
                 modifier = Modifier
-                    .size(50.dp)
-                    .clip(RoundedCornerShape(8.dp))
+                    .size(51.dp)
+                    .clip(RoundedCornerShape(6.dp))
             )
             Spacer(modifier = Modifier.width(16.dp))
             Text(text = course.title)
