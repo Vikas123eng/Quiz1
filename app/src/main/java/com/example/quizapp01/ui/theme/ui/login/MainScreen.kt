@@ -51,12 +51,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.size.Size
@@ -67,6 +70,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -96,7 +101,7 @@ fun MainScreen(navController: NavController) {
         }
     }
 
-    BackHandler(enabled = currentRoute == Screen.Home.route) {
+    BackHandler(enabled = currentRoute == Screen.MainScreen.route) {
         // Exit the app when back is pressed on the Home screen
         (context as? Activity)?.finish()
     }
@@ -186,6 +191,7 @@ fun MainScreen(navController: NavController) {
                             )
                         },
                         onClick = {
+                            navController.navigate(Screen.ChangeClass.route)
                             scope.launch {
                                 drawerState.close()
                             }
@@ -269,6 +275,9 @@ fun MainScreen(navController: NavController) {
         Scaffold(
             containerColor = Color.White,
             topBar = {
+                if (currentRoute != Screen.McqTestScreen.route) {
+
+
                 androidx.compose.material3.TopAppBar(
                     colors = topAppBarColors(
                         containerColor = Color.White,
@@ -310,9 +319,12 @@ fun MainScreen(navController: NavController) {
                         }
                     }
                 )
+            }
             },
             bottomBar = {
-                BottomNavigationBar(navController = nestedNavController)
+                if (currentRoute != Screen.McqTestScreen.route) {
+                    BottomNavigationBar(navController = nestedNavController)
+                }
             }
         ) { innerPadding ->
             Box(modifier = Modifier.padding(innerPadding)) {
@@ -321,6 +333,9 @@ fun MainScreen(navController: NavController) {
         }
     }
 }
+
+
+
 
 @Composable
 fun NestedNavHost(navController: NavController) {
@@ -334,5 +349,69 @@ fun NestedNavHost(navController: NavController) {
         composable(Screen.Leaderboard.route) {
             LeaderboardScreen(navController = navController)
         }
+        composable(Screen.ChangeClass.route) {
+            ChangeClassScreen(navController = navController)
+        }
+        composable(Screen.TestSetsScreen.route) {
+            TestSetsScreen(navController = navController)
+        }
+        composable(Screen.McqTestScreen.route) {
+            McqTestScreen(viewModel = viewModel(),navController=navController)
+        }
+
+        composable(
+            route = Screen.ScoreCard.route,
+            arguments = listOf(
+                navArgument("score") { type = NavType.IntType },
+                navArgument("totalQuestions") { type = NavType.IntType }
+            )
+        ) { backStackEntry ->
+            val score = backStackEntry.arguments?.getInt("score") ?: 0
+            val totalQuestions = backStackEntry.arguments?.getInt("totalQuestions") ?: 0
+            ScorecardScreen(score = score, totalQuestions = totalQuestions,navController)
+        }
+        composable(
+            route = Screen.Solutions.route,
+            arguments = listOf(
+                navArgument("questions") { type = NavType.StringType },
+                navArgument("answers") { type = NavType.StringType }
+
+            )
+        ) { backStackEntry ->
+            val questionsJson = backStackEntry.arguments?.getString("questions") ?: "[]"
+            val answersJson = backStackEntry.arguments?.getString("answers") ?: "[]"
+            val questions = Json.decodeFromString<List<Question>>(questionsJson)
+            val answers = Json.decodeFromString<List<Pair<String, Boolean>>>(answersJson)
+            SolutionsScreen(questions = questions, answers = answers)
+        }
+
+//        composable(
+//            route = Screen.ResultScreen.route,
+//            arguments = listOf(
+//                navArgument("score") { type = NavType.IntType },
+//                navArgument("totalQuestions") { type = NavType.IntType },
+//                navArgument("solutions") { type = NavType.StringType },
+//                navArgument("questions") { type = NavType.StringType },
+//            )
+//        ) { backStackEntry ->
+//            val score = backStackEntry.arguments?.getInt("score") ?: 0
+//            val totalQuestions = backStackEntry.arguments?.getInt("totalQuestions") ?: 0
+//            val solutionsJson = backStackEntry.arguments?.getString("solutions") ?: "[]"
+//            val questionsJson=  backStackEntry.arguments?.getString("questions") ?: "[]"
+//
+//            ResultScreen(
+//                navController = navController,
+//                viewModel = viewModel()
+////                score = score,
+////                totalQuestions = totalQuestions,
+////                solutionsJson = solutionsJson,
+////                questionsJson = questionsJson
+//
+//            )
+//        }
+
+
     }
 }
+
+

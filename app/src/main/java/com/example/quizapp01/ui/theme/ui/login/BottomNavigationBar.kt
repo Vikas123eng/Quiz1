@@ -13,6 +13,9 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.BottomAppBar
 
 import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -35,23 +38,35 @@ fun BottomNavigationBar(navController: NavController) {
     val icons = listOf(Icons.Default.Home, Icons.Default.BarChart, Icons.Default.Leaderboard)
     var selectedIndex by remember { mutableIntStateOf(0) }
 
-    BottomNavigation(
-        backgroundColor = Color.White,
-        modifier = Modifier.height(39.dp)
+    NavigationBar(
+        containerColor = Color.White,
+        modifier = Modifier.height(56.dp)
     ) {
+
         items.forEachIndexed { index, item ->
-            BottomNavigationItem(
-                icon = { Icon(icons[index], contentDescription = item) },
+            NavigationBarItem(
+                icon = { Icon(icons[index], contentDescription = item)
+                       },
                 label = {
                     Text(
                         text = item,
                         style = TextStyle(
-                            fontSize = 12.sp
+                            fontSize = 12.sp,
+                           // color = Color.Black
                         )
                     )
                 },
                 selected = selectedIndex == index,
-                unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.disabled),
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = Color.White,
+                    unselectedIconColor = Color.Gray,
+                    selectedTextColor = Color.Black,
+                    unselectedTextColor = Color.Gray,
+                    indicatorColor = Color.Black
+                ),
+
+//                selectedContentColor = LocalContentColor.current,
+//              unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.disabled),
                 onClick = {
                     selectedIndex = index
                     when (item) {

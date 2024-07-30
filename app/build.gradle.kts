@@ -3,6 +3,8 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    id("org.jetbrains.kotlin.plugin.serialization")
+
 }
 
 android {
@@ -78,6 +80,7 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore:25.0.0")
     implementation("androidx.compose.material3:material3-android:1.2.1")
     implementation("com.google.android.gms:play-services-maps:19.0.0")
+    implementation("androidx.compose.runtime:runtime-livedata:1.6.8")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
@@ -100,6 +103,9 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.0.0")
     implementation("io.coil-kt:coil-svg:2.1.0")
     implementation ("androidx.compose.material:material:1.4.3")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0")
+    implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
 
 
 }

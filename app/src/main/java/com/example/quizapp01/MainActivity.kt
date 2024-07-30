@@ -6,18 +6,25 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.quizapp01.ui.theme.HomeScreen
 import com.example.quizapp01.ui.theme.QuizApp01Theme
 import com.example.quizapp01.ui.theme.SignUpScreen
 import com.example.quizapp01.ui.theme.SplashScreen
 import com.example.quizapp01.ui.theme.data.Quiz
+import com.example.quizapp01.ui.theme.ui.login.ChangeClassScreen
 import com.example.quizapp01.ui.theme.ui.login.LeaderboardScreen
 import com.example.quizapp01.ui.theme.ui.login.MainScreen
 import com.example.quizapp01.ui.theme.ui.login.PerformanceScreen
+import com.example.quizapp01.ui.theme.ui.login.ScorecardScreen
 import com.example.quizapp01.ui.theme.ui.login.Screen
+import com.example.quizapp01.ui.theme.ui.login.SolutionsScreen
+import com.example.quizapp01.ui.theme.ui.login.TestSetsScreen
 import com.example.quizapp01.ui.theme.ui.login.UserDataScreen
 import com.google.android.gms.auth.api.signin.GoogleSignIn.getClient
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -28,25 +35,40 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import com.example.quizapp01.ui.theme.LoginScreen as LoginScreen
 
 
 class MainActivity : ComponentActivity() {
     private lateinit var mGoogleSignInClient: GoogleSignInClient
-//    private fun setUpFirestore(){
+
+//    private fun setUpFirestore() {
+//        val firestore = FirebaseFirestore.getInstance()
+//        val collectionReference: CollectionReference = firestore.collection("classes")
 //
-//         firestore=FirebaseFirestore.getInstance()
-//        val collectionReference:CollectionReference =firestore.collection("quiz02")
 //        collectionReference.addSnapshotListener { value, error ->
-//            if (value==null||error!=null){
-//
-//                Toast.makeText(this,"Having Error Help",Toast.LENGTH_SHORT).show()
+//            if (error != null) {
+//                Log.e("Firestore Error", "Error retrieving data", error)
+//                Toast.makeText(this, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
 //                return@addSnapshotListener
 //            }
-//            Log.d("DATA",value.toObjects(Quiz::class.java).toString())
 //
+//            if (value != null) {
+//                if (value.isEmpty) {
+//                    Log.d("Firestore Data", "No documents found in the 'classes' collection.")
+//                    Toast.makeText(this, "No data found", Toast.LENGTH_SHORT).show()
+//                } else {
+//                    val quizzes = value.toObjects(Quiz::class.java)
+//                    Log.d("Data", quizzes.toString())
+//                }
+//            } else {
+//                Log.d("Firestore Data", "Snapshot is null")
+//                Toast.makeText(this, "Data is null", Toast.LENGTH_SHORT).show()
+//            }
 //        }
-//    }
+  //  }
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,7 +122,35 @@ class MainActivity : ComponentActivity() {
                     composable(Screen.Leaderboard.route){
                         LeaderboardScreen(navController=navController)
                     }
+                    composable(Screen.ChangeClass.route){
+                        ChangeClassScreen(navController=navController)
+                    }
+                    composable(Screen.TestSetsScreen.route){
+                        TestSetsScreen(navController=navController)
+                    }
 
+//                    composable(
+//                        route = Screen.ResultScreen.route,
+//                        arguments = listOf(
+//                            navArgument("score") { type = NavType.IntType },
+//                            navArgument("totalQuestions") { type = NavType.IntType },
+//                            navArgument("solutions") { type = NavType.StringType }
+//                        )
+//                    ) { backStackEntry ->
+//                        val score = backStackEntry.arguments?.getInt("score") ?: 0
+//                        val totalQuestions = backStackEntry.arguments?.getInt("totalQuestions") ?: 0
+//                        val solutionsJson = backStackEntry.arguments?.getString("solutions") ?: "[]"
+//                        val questionsJson = backStackEntry.arguments?.getString("questions") ?: "[]"
+//
+//                        ResultScreen(
+//                            navController = navController,
+//                            viewModel = viewModel()
+////                            score = score,
+////                            totalQuestions = totalQuestions,
+////                            solutionsJson = solutionsJson,
+////                            questionsJson = questionsJson
+//                        )
+//                    }
                 }//NavHost end
 
 

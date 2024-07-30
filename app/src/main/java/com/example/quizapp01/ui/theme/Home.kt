@@ -1,11 +1,8 @@
 package com.example.quizapp01.ui.theme
 
-import android.graphics.fonts.FontStyle
-import android.widget.Toast
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
+import android.content.Intent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,56 +18,24 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 //noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material.BottomNavigation
 //noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.LocalContentColor
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Help
-import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.automirrored.filled.Notes
-import androidx.compose.material.icons.filled.BarChart
-import androidx.compose.material.icons.filled.Class
-import androidx.compose.material.icons.filled.ContactMail
 import androidx.compose.material.icons.filled.Description
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Leaderboard
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemColors
-import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
-import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.rememberDrawerState
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -80,249 +45,25 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavController
-import coil.ImageLoader
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import coil.size.Size
-import com.example.quizapp01.R
-import com.example.quizapp01.ui.theme.ui.login.Screen
 import com.google.android.gms.auth.api.signin.GoogleSignIn.*
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions.*
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import android.net.Uri
+import com.example.quizapp01.ui.theme.ui.login.Screen
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController) {
-    val context = LocalContext.current
-    val logo = "https://i.ibb.co/8N8n4th/Design12.jpg"
-    val scope = rememberCoroutineScope()
-    val googleSignInClient = getClient(context, DEFAULT_SIGN_IN)
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-
-
-//    ModalNavigationDrawer(
-//
-//        gesturesEnabled = true,
-//        drawerState = drawerState,
-//        drawerContent = {
-//
-//            ModalDrawerSheet(
-//                drawerContainerColor = Color.White,
-//                modifier = Modifier
-//                    .width(280.dp)
-//            // Set the drawer width
-//            ) {
-//
-//                Column {
-//                    Box(
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .background(Color.Black)
-//                            .height(159.dp)
-//                            .padding(12.dp),
-//                        contentAlignment = Alignment.TopStart
-//                    ) {
-//                        Column {
-//                            Box(
-//                                modifier = Modifier
-//                                    .size(90.dp)
-//                                    .clip(CircleShape)
-//                                    .background(Color.White)
-//                                    .border(
-//                                        BorderStroke(3.dp, Color.White),
-//                                        CircleShape
-//                                    )
-//                            ) {
-//                                AsyncImage(
-//                                    model = ImageRequest.Builder(LocalContext.current).data(data = logo)
-//                                        .apply(block = fun ImageRequest.Builder.() {
-//                                            crossfade(true)
-//                                            size(Size.ORIGINAL) // Scale down the image to fit the required size
-//                                        }).build(),
-//                                    contentDescription = null,
-//                                    modifier = Modifier
-//                                        .fillMaxSize()
-//                                        .clip(CircleShape)
-//                                )
-//                            }
-//                            Spacer(modifier = Modifier.height(4.dp))
-//                            Column {
-//                                Text(
-//                                    text = "Vikas Ravidas",
-//                                    style = TextStyle(
-//                                        color = Color.White,
-//                                        fontSize = 17.sp
-//                                    )
-//                                )
-//                                Spacer(modifier = Modifier.height(4.dp))
-//                                Text(
-//                                    text = "vikasravidas789@gmail.com",
-//                                    style = TextStyle(
-//                                        color = Color.White,
-//                                        fontSize = 14.sp,
-//                                        fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
-//                                    )
-//                                )
-//                            }
-//                        }
-//                    }
-//
-//                    HorizontalDivider()
-//
-//
-//                    NavigationDrawerItem(
-//                        colors = NavigationDrawerItemDefaults.colors(
-//                            selectedContainerColor = Color.Gray,
-//                            unselectedContainerColor = Color.White
-//                        ),
-//                        label = { Text(text = "Change Class",style = TextStyle(color = Color.Black)) },
-//                        selected = false,
-//                        icon = {
-//                            Icon(
-//                                imageVector = Icons.Default.Class,
-//                                contentDescription = "Home",
-//                                tint = Color.Black
-//
-//                            )
-//                        },
-//                        onClick = {
-//                            scope.launch {
-//                                drawerState.close()
-//                            }
-//                        }
-//                    )
-//
-//                    NavigationDrawerItem(
-//                        colors = NavigationDrawerItemDefaults.colors(
-//                            selectedContainerColor = Color.Gray,
-//                            unselectedContainerColor = Color.White
-//                        ),
-//                        label = { Text(text = "Share App",style = TextStyle(color = Color.Black)) },
-//                        selected = false,
-//                        icon = {
-//                            Icon(
-//                                imageVector = Icons.Default.Share,
-//                                contentDescription = "Share App",
-//                                tint = Color.Black
-//
-//                            )
-//                        },
-//                        onClick = {
-//                            scope.launch {
-//                                drawerState.close()
-//                            }
-//                        }
-//                    )
-//
-//                        NavigationDrawerItem(
-//                            colors = NavigationDrawerItemDefaults.colors(
-//                                selectedContainerColor = Color.Gray,
-//                                unselectedContainerColor = Color.White
-//                            ),
-//                            label = { Text(text = "Need Help",style = TextStyle(color = Color.Black)) },
-//                            selected = false,
-//                            icon = {
-//                                Icon(
-//                                    imageVector = Icons.AutoMirrored.Filled.Help,
-//                                    contentDescription = "Contact Us?",
-//                                    tint = Color.Black
-//
-//                                )
-//                            },
-//                            onClick = {
-//                                scope.launch {
-//                                    drawerState.close()
-//                                }
-//                            }
-//                        )
-//                        NavigationDrawerItem(
-//                            colors = NavigationDrawerItemDefaults.colors(
-//                                selectedContainerColor = Color.Gray,
-//                                unselectedContainerColor = Color.White
-//                            ),
-//                            label = { Text(text = "Logout", style = TextStyle(color = Color.Black)) },
-//                            selected = false,
-//                            icon = {
-//                                Icon(
-//                                    imageVector = Icons.AutoMirrored.Filled.Logout,
-//                                    contentDescription = "Logout",
-//                                   tint = Color.Black
-//                                )
-//                            },
-//                            onClick = {
-//                                Firebase.auth.signOut()
-//                                googleSignInClient.signOut().addOnCompleteListener {
-//                                    Toast.makeText(context, "Logging out...", Toast.LENGTH_SHORT)
-//                                        .show()
-//                                    navController.navigate(Screen.Login.route)
-//                                }
-//                            }
-//                        )
-//
-//                }
-//
-//        }
-//}
-//    ) {
-//        Scaffold(
-//            containerColor = Color.White,
-//            topBar = {
-//                TopAppBar(
-//                    colors = topAppBarColors(
-//                        containerColor = Color.White,
-//                    ),
-//                    title = {
-//                        Text(
-//                            text = "App of War",
-//                            style = TextStyle(
-//                                color = Color.Black,
-//                                fontSize = 20.sp
-//                            )
-//                        )
-//                    },
-//                    navigationIcon = {
-//                        IconButton(onClick = {
-//                            scope.launch {
-//                                drawerState.open()
-//                            }
-//                        }) {
-//                            Icon(
-//                                imageVector = Icons.Filled.Menu,
-//                                contentDescription = "Menu",
-//                                modifier = Modifier.size(30.dp),
-//                                Color.Black
-//                            )
-//                        }
-//                    },
-//                    actions = {
-//                        IconButton(onClick = {
-//                            Toast.makeText(context, "No new notifications", Toast.LENGTH_SHORT).show()
-//                        }) {
-//                            Icon(
-//                                imageVector = Icons.Default.Notifications,
-//                                contentDescription = "Notifications",
-//                                modifier = Modifier.size(30.dp),
-//                                Color.Black
-//                            )
-//                        }
-//                    }
-//                )
-//            },
-//            bottomBar = { BottomNavigationBar(navController) }
-//        )
-//
 
     Scaffold(containerColor = Color.White) { innerPadding ->
         Box(
@@ -341,7 +82,7 @@ fun HomeScreen(navController: NavController) {
                     )
                 )
                 Spacer(modifier = Modifier.height(7.dp))
-                ScrollContent(innerPadding)
+                ScrollContent(innerPadding,navController)
             }
         }
 //        }
@@ -385,19 +126,23 @@ fun HomeScreen(navController: NavController) {
 //}
 @Composable
 fun ActionButtonsRow() {
+    val studyUrl="https://drive.google.com/drive/folders/1JBgljZCWH45v8UO_ImRp-qMKFEU3qqPm?usp=sharing"
+    val topperUrl="https://drive.google.com/drive/folders/1IeEsp8hKsuFInG4x2tarIcbIH84P1DgY?usp=sharing"
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        ActionButton(icon = Icons.Default.Description, text = "Study Material")
-        ActionButton(icon = Icons.AutoMirrored.Filled.Notes, text = "Topper's Notes")
+        ActionButton(icon = Icons.Default.Description, text = "Study Material",studyUrl)
+        ActionButton(icon = Icons.AutoMirrored.Filled.Notes, text = "Topper's Notes",topperUrl)
     }
 }
 
 @Composable
-fun ActionButton(icon: ImageVector, text: String) {
+fun ActionButton(icon: ImageVector, text: String,url :String) {
+
+    val context=LocalContext.current
     Card(
 
         shape = RoundedCornerShape(8.dp),
@@ -415,12 +160,17 @@ fun ActionButton(icon: ImageVector, text: String) {
                 .background(Color.White)
                 .width(150.dp)
                 .height(50.dp)
+                .clickable {
+                    val intent = Intent(Intent.ACTION_VIEW,Uri.parse(url))
+                    startActivity(context, intent, null)
+                }
         ) {
             Icon(imageVector = icon, contentDescription = null, modifier = Modifier.size(24.dp)
             , Color.Black)
             Spacer(modifier = Modifier.width(8.dp))
             Text(text = text, style = TextStyle(fontSize = 16.sp
             , color = Color.Black))
+
         }
     }
 }
@@ -457,7 +207,7 @@ fun QuoteCarousel(quotes: List<String>) {
 }
 
 @Composable
-fun ScrollContent(innerPadding: PaddingValues) {
+fun ScrollContent(innerPadding: PaddingValues,navController: NavController) {
     val chemistry = "https://i.ibb.co/m5WK17r/Chemistry.jpg"
     val physics = "https://i.ibb.co/yf8LjYg/Physics.jpg"
     val maths = "https://i.ibb.co/3NQDb0v/Maths.jpg"
@@ -485,51 +235,39 @@ fun ScrollContent(innerPadding: PaddingValues) {
         )
     }
     Spacer(modifier = Modifier.height(5.dp))
-//    Box(contentAlignment = Alignment.Center)
-//    {
-//        Text(text = "Test You Ability",
-//            style = TextStyle(fontSize = 24.sp, color = Color.Black,
-//                fontWeight = FontWeight.Bold),
-//               textAlign = TextAlign.Center,
-//                            modifier = Modifier
-//                  .align(Alignment.TopCenter)
-//                                .padding(10.dp,0.dp,0.dp,2.dp)
-//        )
-//    }
-
 
 
     Box(modifier = Modifier.fillMaxSize()) {
-
-//            Text(text = "Test You Ability",
-//                //        ,
-//                //        style = TextStyle(fontSize = 24.sp, color = Color.Black,
-////            fontWeight = FontWeight.Bold),
-//                modifier = Modifier
-//                    .align(Alignment.TopCenter)
-//            )
-//
 
         LazyColumn(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize(),
+
             verticalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(7.dp),
         ) {
             items(courses) { course ->
-                CourseCard(course = course)
+                CourseCard(course = course,navController = navController)
             }
         }
     }
 }
 
 @Composable
-fun CourseCard(course: Course) {
+fun CourseCard(course: Course,navController: NavController) {
     Card(
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(2.dp),
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth()
+            .clickable {
+                navController.navigate(Screen.TestSetsScreen.route)
+//                {
+//                    popUpTo(0) {
+//                       // inclusive = true
+//                    }
+    //            }
+            },
      //   colors = CardDefaults.cardColors(Color.White)
     ) {
         Row(
