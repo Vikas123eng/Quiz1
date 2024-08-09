@@ -11,16 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.QuizApp01"
         tools:targetApi="31">
-<activity android:name=".ui.theme.data.MessageActivity"
-    android:label="message">
 
-
-</activity>
-        <activity android:name=".ui.theme.QuizSetsActivity"
-            android:label="quizsetactivity">
-
-
-        </activity>
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -31,19 +22,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<!--        <activity-->
-<!--            android:name=".ui.theme.LoginActivity"-->
-<!--            android:label="Login"-->
-<!--            android:theme="@style/Theme.QuizApp01" />-->
-<!--        <activity-->
-<!--            android:name=".ui.theme.SignUp"-->
-<!--            android:label="SignUp"-->
-<!--            android:theme="@style/Theme.QuizApp01" />-->
-<!--        <activity android:name=".ui.theme.Home"-->
-<!--            android:label="Home"-->
-<!--            android:theme="@style/Theme.QuizApp01">-->
-
-<!--        </activity>-->
     </application>
 
 </manifest>
