@@ -1,106 +1,58 @@
 package com.example.quizapp01.ui.theme.ui.login
 
 
+//noinspection UsingMaterialAndMaterial3Libraries
+//noinspection UsingMaterialAndMaterial3Libraries
 import android.app.Activity
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestore.*
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
-import android.content.Intent
-import androidx.compose.foundation.background
+import android.util.Log
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-//noinspection UsingMaterialAndMaterial3Libraries
-//noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Notes
-import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDrawerState
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat.startActivity
-import androidx.navigation.NavController
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
-import com.google.android.gms.auth.api.signin.GoogleSignIn.*
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions.*
-import kotlinx.coroutines.delay
-import android.net.Uri
-import android.util.Log
-import android.widget.Toast
-import androidx.activity.compose.BackHandler
-import androidx.compose.material.DropdownMenu
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.navArgument
-import com.example.quizapp01.ui.theme.HomeScreen
-import com.example.quizapp01.ui.theme.Lime_Green
+import androidx.navigation.NavController
 import com.example.quizapp01.ui.theme.UI_color
-import com.example.quizapp01.ui.theme.Vibrant_Orange
-import com.example.quizapp01.ui.theme.ui.login.Screen
-import kotlinx.coroutines.selects.whileSelect
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestore.getInstance
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -165,11 +117,34 @@ fun McqTestScreen(viewModel: QuizViewModel = viewModel(), navController: NavCont
         containerColor = Color.White,
         topBar = {
             TopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(Color.Black),
                 title = {
-                    Text("Question ${state.currentQuestionIndex + 1}/${state.questions.size}")
+                    Text(
+                        "Question ${state.currentQuestionIndex + 1}/${state.questions.size}",
+                        style = TextStyle(
+                            color = Color.Green,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 20.sp
+                        )
+                        )
                 },
                 actions = {
-                    Text("Time left: ${timeLeft / 1000} seconds")
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(style = SpanStyle(color = Color.Yellow)) {append("Time left: ")
+                            }
+                            withStyle(style = SpanStyle(
+                                color = if (timeLeft / 1000 < 30) Color.Red else Color.White,
+                                fontWeight = FontWeight.Bold
+                            )) {
+                                append("${timeLeft / 1000}")
+                            }
+                            withStyle(style = SpanStyle(color = Color.White)){
+                                append(" seconds")
+                            }
+                        },
+                        fontSize = 16.sp
+                    )
                 }
             )
         }
@@ -258,6 +233,7 @@ fun McqTestScreen(viewModel: QuizViewModel = viewModel(), navController: NavCont
                                         selectedAnswer?.let {
                                             viewModel.submitAnswer(it)
                                             selectedAnswer = null
+                                            navController.navigate(Screen.Home.route)
                                         }
                                         val score = viewModel.state.value.score
                                         val totalQuestions = viewModel.state.value.questions.size

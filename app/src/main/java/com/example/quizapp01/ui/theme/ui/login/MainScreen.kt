@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.Class
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -47,6 +48,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -78,7 +80,6 @@ import kotlinx.serialization.json.Json
 @Composable
 fun MainScreen(navController: NavController) {
     val context = LocalContext.current
-   // val logo = "https://i.ibb.co/8N8n4th/Design12.jpg"
     val scope = rememberCoroutineScope()
     val googleSignInClient = getClient(context, DEFAULT_SIGN_IN)
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -102,7 +103,6 @@ fun MainScreen(navController: NavController) {
     }
 
     BackHandler(enabled = currentRoute == Screen.MainScreen.route) {
-        // Exit the app when back is pressed on the Home screen
         (context as? Activity)?.finish()
     }
     ModalNavigationDrawer(
@@ -115,7 +115,7 @@ fun MainScreen(navController: NavController) {
                 drawerContainerColor = Color.White,
                 modifier = Modifier
                     .width(280.dp)
-                // Set the drawer width
+
             ) {
 
                 Column {
@@ -176,6 +176,7 @@ fun MainScreen(navController: NavController) {
 
 
                     NavigationDrawerItem(
+                        shape = RectangleShape,
                         colors = NavigationDrawerItemDefaults.colors(
                             selectedContainerColor = Color.Gray,
                             unselectedContainerColor = Color.White
@@ -199,6 +200,7 @@ fun MainScreen(navController: NavController) {
                     )
 
                     NavigationDrawerItem(
+                        shape= RectangleShape,
                         colors = NavigationDrawerItemDefaults.colors(
                             selectedContainerColor = Color.Gray,
                             unselectedContainerColor = Color.White
@@ -221,6 +223,7 @@ fun MainScreen(navController: NavController) {
                     )
 
                     NavigationDrawerItem(
+                        shape=RectangleShape,
                         colors = NavigationDrawerItemDefaults.colors(
                             selectedContainerColor = Color.Gray,
                             unselectedContainerColor = Color.White
@@ -242,6 +245,7 @@ fun MainScreen(navController: NavController) {
                         }
                     )
                     NavigationDrawerItem(
+                        shape=RectangleShape,
                         colors = NavigationDrawerItemDefaults.colors(
                             selectedContainerColor = Color.Gray,
                             unselectedContainerColor = Color.White
@@ -275,22 +279,24 @@ fun MainScreen(navController: NavController) {
         Scaffold(
             containerColor = Color.White,
             topBar = {
-                if (currentRoute != Screen.McqTestScreen.route) {
+                if (currentRoute != Screen.McqTestScreen.route&&currentRoute!=Screen.Leaderboard.route) {
 
 
-                androidx.compose.material3.TopAppBar(
+                CenterAlignedTopAppBar(
                     colors = topAppBarColors(
                         containerColor = Color.White,
                     ),
                     title = {
+
                         Text(
+
                             text = "App of War",
                             style = TextStyle(
                                 color = Color.Black,
                                 fontSize = 20.sp
                             )
                         )
-                    },
+                          } ,
                     navigationIcon = {
                         IconButton(onClick = {
                             scope.launch {
@@ -318,8 +324,11 @@ fun MainScreen(navController: NavController) {
                             )
                         }
                     }
+
                 )
+
             }
+
             },
             bottomBar = {
                 if (currentRoute != Screen.McqTestScreen.route) {
